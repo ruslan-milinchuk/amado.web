@@ -28,7 +28,11 @@ const Footer = () => (
     </div>
     <div className={c.section}>
       <div className={c.date}>
-        <img src="./img/logo-2.png" alt="image logotype" className={c.logo} />
+        <img
+          src="./img/logo-white.png"
+          alt="image logotype"
+          className={c.logo}
+        />
         <p className={c.description}>
           Copyright © All rights reserved | This template is made with
           <i className={c.icon_heart} />
