@@ -1,6 +1,6 @@
 import React from "react";
 
-const navigateList = ["home", "shop", "product", "cart", "checkout"];
+const navigateList = ["home", "shop", "cart"];
 
 const Navigate = ({ className }) => (
   <ul className={className.navigate}>

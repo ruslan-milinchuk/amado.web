@@ -1,10 +1,10 @@
 import React from "react";
 
-import "./style.css";
+import style from "./header.module.css";
 
 const Header = () => (
-  <div className="header">
-    <div className="header__logo">
+  <div className={style.wrapper}>
+    <div className={style.logo}>
       <img src="./img/logo" alt="" />
     </div>
   </div>

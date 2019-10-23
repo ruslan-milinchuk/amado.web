@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import c from "./layout.module.css";
+import style from "./layout.module.css";
 import TriangleTop from "../../icons/TriangleTop";
 
 class Layout extends Component {
@@ -12,9 +12,9 @@ class Layout extends Component {
   render() {
     const { children } = this.props;
     return (
-      <div className={c.wrapper}>
+      <div className={style.wrapper}>
         {children}
-        <a href="#" className={c.scroll_top}>
+        <a href="#" className={style.scrollTop}>
           <TriangleTop />
         </a>
       </div>
