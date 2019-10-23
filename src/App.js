@@ -9,5 +9,5 @@ const App = () => (
     <Footer />
   </div>
 );
-q;
+
 export default App;
