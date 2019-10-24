@@ -19,7 +19,6 @@ const Header = () => (
         <img src="./img/logo-black.png" alt="logotype image" />
       </div>
       <Navigate className={styles} />
-      <div className={styles.btnNewProduct}>New this week</div>
       <div className={styles.btnItem}>
         <div className={styles.btnIcon}>
           <Basket />
@@ -39,20 +38,7 @@ const Header = () => (
         </div>
         Search
       </div>
-      <div className={styles.social}>
-        <a className={styles.socialLink} href="#">
-          <Pinterest />
-        </a>
-        <a className={styles.socialLink} href="#">
-          <Facebook />
-        </a>
-        <a className={styles.socialLink} href="#">
-          <Twitter />
-        </a>
-        <a className={styles.socialLink} href="#">
-          <Instagram />
-        </a>
-      </div>
+      <SocialLinks />
     </div>
     <div className={styles.section}>
       <img
@@ -62,6 +48,39 @@ const Header = () => (
       />
       <div className={styles.btnMenu} />
     </div>
+  </div>
+);
+
+const socialArr = [
+  {
+    name: "pinterest",
+    href: "http://pinterest.com",
+    component: <Pinterest />
+  },
+  {
+    name: "facebook",
+    href: "http://facebook.com",
+    component: <Facebook />
+  },
+  {
+    name: "twitter",
+    href: "http://twitter.com",
+    component: <Twitter />
+  },
+  {
+    name: "instagram",
+    href: "https://www.instagram.com",
+    component: <Instagram />
+  }
+];
+
+const SocialLinks = () => (
+  <div className={styles.social}>
+    {socialArr.map(({ name, component, href }) => (
+      <a key={name} className={styles.socialLink} href={href} target="_blank">
+        {component}
+      </a>
+    ))}
   </div>
 );
 

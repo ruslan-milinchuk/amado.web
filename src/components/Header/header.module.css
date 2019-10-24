@@ -31,6 +31,7 @@
   background: #fbb710;
   margin-left: 190px;
   margin-bottom: 20px;
+  display: none;
 }
 
 .btnClosed:after {
@@ -85,12 +86,13 @@
 }
 
 .logo {
-  margin-bottom: 100px;
+  margin-bottom: 80px;
   display: block;
 }
 
 .navigate {
   padding-left: 0;
+  margin-bottom: 60px;
 }
 
 .item {
@@ -122,27 +124,6 @@
   background-color: #fbb710;
   z-index: 10;
   content: "";
-}
-
-.btnNewProduct {
-  background-color: #fbb710;
-  width: 160px;
-  min-width: 160px;
-  height: 55px;
-  color: #ffffff;
-  border: none;
-  border-radius: 0;
-  padding: 0 7px;
-  font-size: 18px;
-  line-height: 56px;
-  font-weight: 700;
-  text-align: center;
-  cursor: pointer;
-  margin: 30px 0 100px;
-}
-
-.btnNewProduct:hover {
-  background-color: #131212;
 }
 
 .btnItem {
@@ -179,7 +160,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 100px;
+  margin-top: 80px;
 }
 
 .socialLink {
@@ -202,6 +183,10 @@
     padding: 0 75px 60px 75px;
   }
 
+  .btnClosed {
+    display: block;
+  }
+
   .section:last-child {
     display: flex;
   }
@@ -219,10 +204,5 @@
 
   .social {
     margin-right: 50px;
-  }
-
-  .btnNewProduct {
-    width: 140px;
-    min-width: 140px;
   }
 }
