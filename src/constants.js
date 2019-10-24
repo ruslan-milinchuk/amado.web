@@ -1,1 +1,1 @@
-export const CHANGE_IS_OPEN = "CHANGE_IS_OPEN";
+export const CHANGE_MENU_STATUS = "CHANGE_MENU_STATUS";

@@ -1,6 +1,5 @@
-import { CHANGE_IS_OPEN } from "../constants";
+import { CHANGE_MENU_STATUS } from "../constants";
 
-export const changeIsOpen = () => ({
-  type: CHANGE_IS_OPEN
+export const changeMenuStatus = () => ({
+  type: CHANGE_MENU_STATUS
 });
-

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import windowSize from "react-window-size";
+
 import styles from "./header.module.css";
 
 import Nav from "../Nav";
@@ -11,19 +13,44 @@ import Facebook from "../../icons/Facebook";
 import Twitter from "../../icons/Twitter";
 import Instagram from "../../icons/Instagram";
 
-import { changeIsOpen } from "../../action/actionHeader";
+import { changeMenuStatus } from "../../action/actionHeader";
 
 class Header extends Component {
+  componentDidMount() {
+    const { windowWidth, headerMenuStatus, changeMenuStatus } = this.props;
+    if (windowWidth > 767 && headerMenuStatus) {
+      changeMenuStatus();
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { windowWidth, headerMenuStatus, changeMenuStatus } = this.props;
+    if (windowWidth !== prevProps.windowWidth) {
+      if (windowWidth > 767 && headerMenuStatus) {
+        changeMenuStatus();
+      }
+      if (windowWidth <= 767 && !headerMenuStatus) {
+        changeMenuStatus();
+      }
+    }
+  }
+
   render() {
-    const { headerIsOpen, changeIsOpen } = this.props;
+    const { headerMenuStatus, changeMenuStatus, windowWidth } = this.props;
     return (
       <div className={styles.wrapper}>
-        <div className={headerIsOpen ? styles.sectionClose : styles.section}>
+        <div
+          className={headerMenuStatus ? styles.sectionClose : styles.section}
+        >
           <div
-            className={headerIsOpen ? styles.closedMenu : styles.openMenu}
-            onClick={changeIsOpen}
+            className={
+              !headerMenuStatus && windowWidth <= 767
+                ? styles.openMenu
+                : styles.closedMenu
+            }
+            onClick={changeMenuStatus}
           />
-          <div className={styles.btnClosed} onClick={changeIsOpen} />
+          <div className={styles.btnClosed} onClick={changeMenuStatus} />
           <div className={styles.sectionUnFixed}>
             <div className={styles.logo}>
               <img src="./img/logo-black.png" alt="logotype image" />
@@ -39,7 +66,7 @@ class Header extends Component {
             src="./img/logo-black.png"
             alt="logotype image"
           />
-          <div className={styles.btnMenu} onClick={changeIsOpen} />
+          <div className={styles.btnMenu} onClick={changeMenuStatus} />
         </div>
       </div>
     );
@@ -103,9 +130,11 @@ const BottomNav = () => (
   </div>
 );
 
+const HeaderCheckSize = windowSize(Header);
+
 export default connect(
-  ({ headerIsOpen }) => ({
-    headerIsOpen
+  ({ headerMenuStatus }) => ({
+    headerMenuStatus
   }),
-  { changeIsOpen }
-)(Header);
+  { changeMenuStatus }
+)(HeaderCheckSize);
