@@ -14,6 +14,7 @@ import Instagram from "../../icons/Instagram";
 const Header = () => (
   <div className={styles.wrapper}>
     <div className={styles.section}>
+      <div className={styles.btnClosed} />
       <div className={styles.logo}>
         <img src="./img/logo-black.png" alt="logotype image" />
       </div>

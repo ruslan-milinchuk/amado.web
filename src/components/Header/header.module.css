@@ -24,6 +24,35 @@
   display: none;
 }
 
+.btnClosed {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  background: #fbb710;
+  margin-left: 190px;
+  margin-bottom: 20px;
+}
+
+.btnClosed:after {
+  position: absolute;
+  content: "";
+  width: 15px;
+  border-bottom: 2px white solid;
+  transform: rotate(45deg);
+  top: 18px;
+  left: 12px;
+}
+
+.btnClosed:before {
+  position: absolute;
+  content: "";
+  width: 15px;
+  border-bottom: 2px white solid;
+  transform: rotate(135deg);
+  top: 18px;
+  left: 12px;
+}
+
 .logoMobil {
   max-width: 70px;
   max-height: 30px;
@@ -169,10 +198,31 @@
 
 @media screen and (max-width: 767px) {
   .section:first-child {
-    display: none;
+    /*display: none;*/
+    padding: 0 75px 60px 75px;
   }
 
   .section:last-child {
     display: flex;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .section:first-child {
+    padding: 0 0 50px 60px;
+    width: 265px;
+  }
+
+  .btnClosed {
+    margin-left: 155px;
+  }
+
+  .social {
+    margin-right: 50px;
+  }
+
+  .btnNewProduct {
+    width: 140px;
+    min-width: 140px;
   }
 }
