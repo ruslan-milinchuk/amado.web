@@ -1,5 +1,5 @@
 import React from "react";
-import Navigate from "../Navigate";
+import Nav from "../Nav";
 
 import style from "./footer.module.css";
 
@@ -23,9 +23,8 @@ const Footer = () => (
         </p>
       </div>
       <div className={style.navigate}>
-        <Navigate className={style} />
+        <Nav className={style} />
       </div>
-      <div className={style.btn} />
     </div>
   </div>
 );
