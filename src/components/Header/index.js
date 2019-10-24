@@ -1,5 +1,5 @@
-import React from "react";
-
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import styles from "./header.module.css";
 
 import Nav from "../Nav";
@@ -11,27 +11,40 @@ import Facebook from "../../icons/Facebook";
 import Twitter from "../../icons/Twitter";
 import Instagram from "../../icons/Instagram";
 
-const Header = () => (
-  <div className={styles.wrapper}>
-    <div className={styles.section}>
-      <div className={styles.btnClosed} />
-      <div className={styles.logo}>
-        <img src="./img/logo-black.png" alt="logotype image" />
+import { changeIsOpen } from "../../action/actionHeader";
+
+class Header extends Component {
+  render() {
+    const { headerIsOpen, changeIsOpen } = this.props;
+    return (
+      <div className={styles.wrapper}>
+        <div className={headerIsOpen ? styles.sectionClose : styles.section}>
+          <div
+            className={headerIsOpen ? styles.closedMenu : styles.openMenu}
+            onClick={changeIsOpen}
+          />
+          <div className={styles.btnClosed} onClick={changeIsOpen} />
+          <div className={styles.sectionUnFixed}>
+            <div className={styles.logo}>
+              <img src="./img/logo-black.png" alt="logotype image" />
+            </div>
+            <Nav className={styles} />
+            <BottomNav />
+            <SocialLinks />
+          </div>
+        </div>
+        <div className={styles.section}>
+          <img
+            className={styles.logoMobil}
+            src="./img/logo-black.png"
+            alt="logotype image"
+          />
+          <div className={styles.btnMenu} onClick={changeIsOpen} />
+        </div>
       </div>
-      <Nav className={styles} />
-      <BottomNav />
-      <SocialLinks />
-    </div>
-    <div className={styles.section}>
-      <img
-        className={styles.logoMobil}
-        src="./img/logo-black.png"
-        alt="logotype image"
-      />
-      <div className={styles.btnMenu} />
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 const socialArr = [
   {
@@ -90,4 +103,9 @@ const BottomNav = () => (
   </div>
 );
 
-export default Header;
+export default connect(
+  ({ headerIsOpen }) => ({
+    headerIsOpen
+  }),
+  { changeIsOpen }
+)(Header);
