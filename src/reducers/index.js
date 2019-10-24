@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import { headerMenuStatus } from "./headerMenuStatus";
+import { header } from "./header";
 
-const rootReducer = combineReducers({ headerMenuStatus });
+const rootReducer = combineReducers({ header });
 
 export default rootReducer;
