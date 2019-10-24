@@ -13,38 +13,37 @@ import Facebook from "../../icons/Facebook";
 import Twitter from "../../icons/Twitter";
 import Instagram from "../../icons/Instagram";
 
-import { changeMenuStatus } from "../../action/actionHeader";
+import { changeMenuStatus } from "../../action/header";
 
 class Header extends Component {
   componentDidMount() {
-    const { windowWidth, headerMenuStatus, changeMenuStatus } = this.props;
-    if (windowWidth > 767 && headerMenuStatus) {
+    const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
+    if (windowWidth > 767 && isOpenHeader) {
       changeMenuStatus();
     }
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    const { windowWidth, headerMenuStatus, changeMenuStatus } = this.props;
+    const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
+    console.log("isOpenHeader", isOpenHeader);
     if (windowWidth !== prevProps.windowWidth) {
-      if (windowWidth > 767 && headerMenuStatus) {
+      if (windowWidth > 767 && isOpenHeader) {
         changeMenuStatus();
       }
-      if (windowWidth <= 767 && !headerMenuStatus) {
+      if (windowWidth <= 767 && !isOpenHeader) {
         changeMenuStatus();
       }
     }
   }
 
   render() {
-    const { headerMenuStatus, changeMenuStatus, windowWidth } = this.props;
+    const { isOpenHeader, changeMenuStatus, windowWidth } = this.props;
     return (
       <div className={styles.wrapper}>
-        <div
-          className={headerMenuStatus ? styles.sectionClose : styles.section}
-        >
+        <div className={isOpenHeader ? styles.sectionClose : styles.section}>
           <div
             className={
-              !headerMenuStatus && windowWidth <= 767
+              !isOpenHeader && windowWidth <= 767
                 ? styles.openMenu
                 : styles.closedMenu
             }
@@ -133,8 +132,8 @@ const BottomNav = () => (
 const HeaderCheckSize = windowSize(Header);
 
 export default connect(
-  ({ headerMenuStatus }) => ({
-    headerMenuStatus
+  ({ header }) => ({
+    isOpenHeader: header
   }),
   { changeMenuStatus }
 )(HeaderCheckSize);
