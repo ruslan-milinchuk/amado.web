@@ -43,6 +43,7 @@
 .sectionUnFixed {
   overflow: auto;
   max-height: 100vmax;
+  position: relative;
 }
 
 .sectionClose {
@@ -160,6 +161,7 @@
   padding: 15px 0;
   line-height: 1;
   cursor: pointer;
+  z-index: 1;
 }
 
 .btnItem:hover {
