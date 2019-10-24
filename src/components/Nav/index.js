@@ -2,7 +2,7 @@ import React from "react";
 
 const navigateList = ["home", "shop", "cart"];
 
-const Navigate = ({ className }) => (
+const Nav = ({ className }) => (
   <ul className={className.navigate}>
     {navigateList.map(item => (
       <li className={className.item}>{item}</li>
@@ -10,4 +10,4 @@ const Navigate = ({ className }) => (
   </ul>
 );
 
-export default Navigate;
+export default Nav;

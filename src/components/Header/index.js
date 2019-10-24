@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./header.module.css";
 
-import Navigate from "../Navigate";
+import Nav from "../Nav";
 import Basket from "../../icons/Basket";
 import Star from "../../icons/Star";
 import Search from "../../icons/Search";
@@ -18,26 +18,8 @@ const Header = () => (
       <div className={styles.logo}>
         <img src="./img/logo-black.png" alt="logotype image" />
       </div>
-      <Navigate className={styles} />
-      <div className={styles.btnItem}>
-        <div className={styles.btnIcon}>
-          <Basket />
-        </div>
-        Cart
-        <span className={styles.count}>(0)</span>
-      </div>
-      <div className={styles.btnItem}>
-        <div className={styles.btnIcon}>
-          <Star />
-        </div>
-        Favorite
-      </div>
-      <div className={styles.btnItem}>
-        <div className={styles.btnIcon}>
-          <Search />
-        </div>
-        Search
-      </div>
+      <Nav className={styles} />
+      <BottomNav />
       <SocialLinks />
     </div>
     <div className={styles.section}>
@@ -81,6 +63,30 @@ const SocialLinks = () => (
         {component}
       </a>
     ))}
+  </div>
+);
+
+const BottomNav = () => (
+  <div>
+    <div className={styles.btnItem}>
+      <div className={styles.btnIcon}>
+        <Basket />
+      </div>
+      Cart
+      <span className={styles.count}>(0)</span>
+    </div>
+    <div className={styles.btnItem}>
+      <div className={styles.btnIcon}>
+        <Star />
+      </div>
+      Favorite
+    </div>
+    <div className={styles.btnItem}>
+      <div className={styles.btnIcon}>
+        <Search />
+      </div>
+      Search
+    </div>
   </div>
 );
 
