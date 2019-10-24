@@ -1,13 +1,19 @@
+.wrapper {
+  position: relative;
+}
+
 .section:first-child {
   transition-duration: 500ms;
   position: relative;
-  z-index: 1;
+  z-index: 2;
   flex: 0 0 320px;
   width: 320px;
   max-width: 320px;
   background-color: #fff;
   padding: 60px 75px;
   box-sizing: border-box;
+  z-index: 10;
+  background-color: white;
 }
 
 .section:last-child {
@@ -22,8 +28,26 @@
   box-sizing: border-box;
   box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.15);
   display: none;
+  z-index: 9;
 }
 
+.closedMenu {
+  display: none;
+}
+
+.openMenu {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
+.sectionUnFixed {
+  overflow: auto;
+  max-height: 100vmax;
+}
+
+.sectionClose {
+  display: none;
+}
 .btnClosed {
   position: relative;
   width: 40px;
@@ -31,6 +55,7 @@
   background: #fbb710;
   margin-left: 190px;
   margin-bottom: 20px;
+  cursor: pointer;
   display: none;
 }
 
@@ -179,8 +204,8 @@
 
 @media screen and (max-width: 767px) {
   .section:first-child {
-    /*display: none;*/
     padding: 0 75px 60px 75px;
+    position: fixed;
   }
 
   .btnClosed {
