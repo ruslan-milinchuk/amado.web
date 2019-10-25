@@ -1,6 +1,6 @@
-import { WRITE_ARR_PRODUCTS_TO_STORE } from "../constants";
+import { SET_TOP_PRODUCT_LIST } from "../constants";
 
-export const writeProductsToStore = (arr) => ({
-  type: WRITE_ARR_PRODUCTS_TO_STORE,
+export const setTopProductList = arr => ({
+  type: SET_TOP_PRODUCT_LIST,
   arr
 });
