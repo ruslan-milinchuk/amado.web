@@ -25,7 +25,6 @@ class Header extends Component {
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
-    console.log("isOpenHeader", isOpenHeader);
     if (windowWidth !== prevProps.windowWidth) {
       if (windowWidth > 767 && isOpenHeader) {
         changeMenuStatus();
