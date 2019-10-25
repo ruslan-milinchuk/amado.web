@@ -4,7 +4,7 @@
 
 .section:first-child {
   transition-duration: 500ms;
-  position: relative;
+  position: absolute;
   z-index: 2;
   flex: 0 0 320px;
   width: 320px;
@@ -29,6 +29,7 @@
   box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.15);
   display: none;
   z-index: 9;
+  background-color: white;
 }
 
 .closedMenu {
@@ -201,6 +202,7 @@
 @media screen and (max-width: 991px) {
   .section:first-child {
     padding: 50px;
+    width: 245px;
   }
 }
 
@@ -208,6 +210,7 @@
   .section:first-child {
     padding: 0 75px 60px 75px;
     position: fixed;
+    width: 320px;
   }
 
   .btnClosed {
