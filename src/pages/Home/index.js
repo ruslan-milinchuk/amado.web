@@ -2,38 +2,28 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import styles from "./home.module.css";
-import { writeProductsToStore } from "../../action/home";
-import { LENGTH_ARR_PRODUCTS_FOR_HOME } from "../../constants";
+import { setTopProductList } from "../../action/home";
+import apiFetch from "../../utils/apiFetch";
+import Loading from "../../components/Loading";
 
 class Home extends Component {
   async componentDidMount() {
-    const { writeProductsToStore } = this.props;
-    const data = await fetch(
-      `https://frozen-garden-29504.herokuapp.com/products?isTop=true`,
-      {
-        method: "GET"
-      }
-    );
-
-    const allListProduct = await data.json();
-
-    let arrRandomNumbers = [];
-    for (let i = 0; arrRandomNumbers.length !== 9; i++) {
-      const randomNumber = this.randomNumber(0, allListProduct.length - 1);
-      if (arrRandomNumbers.indexOf(randomNumber) === -1) {
-        arrRandomNumbers.push(randomNumber);
-      }
-    }
-    let arrNeededProducts = [];
-    for (let i = 0; i < LENGTH_ARR_PRODUCTS_FOR_HOME; i++) {
-      arrNeededProducts.push(allListProduct[arrRandomNumbers[i]]);
-    }
-
-    writeProductsToStore(arrNeededProducts);
+    const { setTopProductList } = this.props;
+    const data = await apiFetch("/products?isTop=true");
+    const randomNumbersList = randomNumberList(data);
+    const sliceTopProduct = randomNumbersList.map(i => data[i]);
+    setTopProductList(sliceTopProduct);
   }
 
   render() {
     const { arrayProducts, history } = this.props;
+    if (arrayProducts.length === 0) {
+      return (
+        <div className={styles.wrapper}>
+          <Loading />
+        </div>
+      );
+    }
     return (
       <div className={styles.wrapper}>
         {arrayProducts.map(
@@ -63,12 +53,23 @@ class Home extends Component {
       </div>
     );
   }
-
-  randomNumber = (min, max) => {
-    let rand = min + Math.random() * (max + 1 - min);
-    return Math.floor(rand);
-  };
 }
+
+const randomNumber = (min, max) => {
+  let rand = min + Math.random() * (max + 1 - min);
+  return Math.floor(rand);
+};
+
+const randomNumberList = data => {
+  let arrRandomNumbers = [];
+  for (let i = 0; arrRandomNumbers.length !== 9; i++) {
+    const randNumber = randomNumber(0, data.length - 1);
+    if (arrRandomNumbers.indexOf(randNumber) === -1) {
+      arrRandomNumbers.push(randNumber);
+    }
+  }
+  return arrRandomNumbers;
+};
 
 const HomeWithLocation = withRouter(Home);
 
@@ -76,5 +77,5 @@ export default connect(
   ({ home }) => ({
     arrayProducts: home
   }),
-  { writeProductsToStore }
+  { setTopProductList }
 )(HomeWithLocation);

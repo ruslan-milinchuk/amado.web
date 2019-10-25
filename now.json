@@ -1,4 +1,10 @@
 {
+  "name": "amado.web",
   "version": 2,
-  "name": "amado.web"
+  "build": {
+    "env": {
+      "NODE_ENV": "production",
+      "REACT_APP_API_URL": "https://frozen-garden-29504.herokuapp.com"
+    }
+  }
 }

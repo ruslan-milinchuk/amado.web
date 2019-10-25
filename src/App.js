@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
+
 const history = createBrowserHistory();
 
 const App = () => (
