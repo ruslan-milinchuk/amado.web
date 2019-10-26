@@ -5,6 +5,7 @@ import styles from "./home.module.css";
 import { setTopProductList } from "../../action/home";
 import apiFetch from "../../utils/apiFetch";
 import Loading from "../../components/Loading";
+import { TOP_PRODUCT_LIST_LENGTH } from "../../constants";
 
 class Home extends Component {
   async componentDidMount() {
@@ -62,7 +63,7 @@ const randomNumber = (min, max) => {
 
 const randomNumberList = data => {
   let arrRandomNumbers = [];
-  for (let i = 0; arrRandomNumbers.length !== 9; i++) {
+  for (let i = 0; arrRandomNumbers.length !== TOP_PRODUCT_LIST_LENGTH; i++) {
     const randNumber = randomNumber(0, data.length - 1);
     if (arrRandomNumbers.indexOf(randNumber) === -1) {
       arrRandomNumbers.push(randNumber);
