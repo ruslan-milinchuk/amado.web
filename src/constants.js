@@ -1,5 +1,12 @@
 export const CHANGE_MENU_STATUS = "CHANGE_MENU_STATUS";
 export const SET_TOP_PRODUCT_LIST = "SET_TOP_PRODUCT_LIST";
-
+export const GET_PRODUCT = "GET_PRODUCT";
+export const CHANGE_QTY_PRODUCT = "CHANGE_QTY_PRODUCT";
+export const SET_QTY_ENTER_VALUE = "SET_QTY_ENTER_VALUE";
+export const CHANGE_SLIDE = "CHANGE_SLIDE";
+export const CHOOSE_IMG = "CHOOSE_IMG";
 
 export const TOP_PRODUCT_LIST_LENGTH = 9;
+export const CHANGE_QTY_PRODUCT_UPP = "up";
+export const CHANGE_QTY_PRODUCT_DOWN = "down";
+export const SLIDER_IMG_TIME_ANIMATION = 6000;
