@@ -1,31 +1,27 @@
 import {
-  GET_PRODUCT,
-  CHANGE_QTY_PRODUCT,
-  SET_QTY_ENTER_VALUE,
-  CHANGE_SLIDE,
-  CHOOSE_IMG
+  END_DATA_PRODUCT_DETAILS,
+  CHOOSE_IMG,
+  START_DATA_PRODUCT_DETAILS,
+  SET_DATA_PRODUCT_DETAILS
 } from "../constants";
+import apiFetch from "../utils/apiFetch";
 
-export const getProduct = productDetails => ({
-  type: GET_PRODUCT,
-  productDetails
-});
+export const getProduct = idProduct => {
+  return async dispatch => {
+    dispatch({ type: START_DATA_PRODUCT_DETAILS });
+    const data = await apiFetch(`/products/${idProduct}`);
+    if (data.status === 200) {
+      dispatch({ type: END_DATA_PRODUCT_DETAILS });
+    }
+    dispatch({ type: SET_DATA_PRODUCT_DETAILS, payload: data });
+  };
+};
 
-export const changeQtyProduct = qtyProduct => ({
-  type: CHANGE_QTY_PRODUCT,
-  qtyProduct
-});
-
-export const changeEnteredValue = enteredValue => ({
-  type: SET_QTY_ENTER_VALUE,
-  enteredValue
-});
-
-export const changeSlide = () => ({
-  type: CHANGE_SLIDE
-});
-
-export const chooseImg = (imgIndex) => ({
-  type: CHOOSE_IMG,
-  imgIndex
-});
+export const chooseImg = imgIndex => {
+  return async (dispatch, getState) => {
+    const { product } = getState();
+    const { allSliders } = product.sliderData;
+    const activeSlider = allSliders[imgIndex];
+    dispatch({ type: CHOOSE_IMG, payload: activeSlider });
+  };
+};
