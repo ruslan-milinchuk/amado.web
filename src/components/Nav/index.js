@@ -4,8 +4,10 @@ const navigateList = ["home", "shop", "cart"];
 
 const Nav = ({ className }) => (
   <ul className={className.navigate}>
-    {navigateList.map(item => (
-      <li className={className.item}>{item}</li>
+    {navigateList.map((item, index) => (
+      <li key={index} className={className.item}>
+        {item}
+      </li>
     ))}
   </ul>
 );

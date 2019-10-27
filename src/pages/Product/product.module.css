@@ -20,13 +20,16 @@
   text-transform: uppercase;
   letter-spacing: 1.5px;
 }
-.nav > h4 {
-  display: flex;
-  cursor: pointer;
+
+.nav > svg {
+  width: 15px;
+  margin: 0 10px;
+  color: #fbb710;
 }
 
-.nav > h4:hover {
-  color: #fbb710;
+.linkTo:hover {
+  cursor: pointer;
+  color: #fbc115;
 }
 
 .titleLink {
@@ -176,7 +179,6 @@
   box-sizing: border-box;
   display: inline-block;
   position: relative;
-  margin: 2px;
 }
 
 .itemActive:after {
@@ -199,10 +201,6 @@
   transform: translate(-50%, -50%);
 }
 
-.imgLarge {
-  animation: eye 6s ease-in-out infinite;
-}
-
 .content {
   position: absolute;
   top: 0;
@@ -220,23 +218,6 @@
 
 .correlationHeight {
   padding-top: 100%;
-}
-
-@keyframes eye {
-  0% {
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
 }
 
 @media screen and (max-width: 1008px) {

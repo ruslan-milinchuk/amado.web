@@ -30,6 +30,10 @@
   background-color: #131212;
 }
 
+.displayNone {
+  display: none;
+}
+
 @media screen and (max-width: 767px) {
   .scrollTop {
     right: 30px;
