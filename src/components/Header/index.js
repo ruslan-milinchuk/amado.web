@@ -38,7 +38,7 @@ class Header extends Component {
   render() {
     const { isOpenHeader, changeMenuStatus, windowWidth } = this.props;
     return (
-      <div className={styles.wrapper}>
+      <div className={styles.wrapper} id="headerWrapper">
         <div className={isOpenHeader ? styles.sectionClose : styles.section}>
           <div
             className={
@@ -51,7 +51,7 @@ class Header extends Component {
           <div className={styles.btnClosed} onClick={changeMenuStatus} />
           <div className={styles.sectionUnFixed}>
             <div className={styles.logo}>
-              <img src="./img/logo-black.png" alt="logotype image" />
+              <img src="./img/logo-black.png" alt="logotype" />
             </div>
             <Nav className={styles} />
             <BottomNav />
@@ -62,7 +62,7 @@ class Header extends Component {
           <img
             className={styles.logoMobil}
             src="./img/logo-black.png"
-            alt="logotype image"
+            alt="logotype"
           />
           <div className={styles.btnMenu} onClick={changeMenuStatus} />
         </div>
@@ -97,7 +97,13 @@ const socialArr = [
 const SocialLinks = () => (
   <div className={styles.social}>
     {socialArr.map(({ name, component, href }) => (
-      <a key={name} className={styles.socialLink} href={href} target="_blank">
+      <a
+        key={name}
+        className={styles.socialLink}
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {component}
       </a>
     ))}
