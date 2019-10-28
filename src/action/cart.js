@@ -3,14 +3,38 @@ import {
   CHANGE_QTY_PRODUCT,
   CHANGE_QTY_PRODUCT_DOWN,
   CHANGE_QTY_PRODUCT_UP,
-  SET_QTY_ENTER_VALUE
+  GET_PRODUCTS_DETAILS_CART,
+  SET_QTY_ENTER_VALUE,
+  START_DATA_PRODUCT_DETAILS
 } from "../constants";
+
+import { getProductDetails } from "../utils/getProductDetails";
 
 export const addToCart = idProduct => {
   return (dispatch, getState) => {
     const { cart } = getState();
     const { qtyProduct } = cart;
-    dispatch({ type: ADD_TO_CART, payload: { idProduct, qtyProduct } });
+    return dispatch({
+      type: ADD_TO_CART,
+      payload: { idProduct, qtyProduct }
+    });
+  };
+};
+
+export const getProductsDetailsCart = () => {
+  return async (dispatch, getState) => {
+    dispatch({ type: START_DATA_PRODUCT_DETAILS });
+    const store = getState();
+    const { cartList } = store.cart;
+    let detailsProduct = [];
+    await cartList.map(item => {
+      const { id, qty } = item;
+      detailsProduct.push({
+        detailsProduct: getProductDetails(id),
+        qtyProduct: qty
+      });
+    });
+    dispatch({ type: GET_PRODUCTS_DETAILS_CART, payload: detailsProduct });
   };
 };
 
@@ -34,7 +58,7 @@ export const changeQtyProduct = controlQty => {
   };
 };
 
-export const changeEnteredValue = enteredValue => {
+export const enterQtyProductInDetails = enteredValue => {
   return (dispatch, getState) => {
     const { cart } = getState();
     const { qtyProduct } = cart;
