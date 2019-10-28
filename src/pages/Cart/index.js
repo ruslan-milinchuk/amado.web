@@ -4,7 +4,6 @@ import { enterQtyProductInDetails } from "../../action/cart";
 
 class Cart extends Component {
   render() {
-    const { cartInfo } = this.props;
     return <div />;
   }
 }

@@ -4,7 +4,6 @@ import { withRouter } from "react-router";
 import styles from "./home.module.css";
 import { sliceRandomProductList } from "../../action/home";
 import Loading from "../../components/Loading";
-import { enterQtyProductInDetails } from "../../action/cart";
 
 class Home extends Component {
   componentDidMount() {
@@ -22,7 +21,7 @@ class Home extends Component {
         </div>
       );
     }
-    if (error.length !== 0) {
+    if (error) {
       return <h4>ERROR: {error}</h4>;
     }
     return (
@@ -62,5 +61,5 @@ export default connect(
   ({ home }) => ({
     homeDetails: home
   }),
-  { sliceRandomProductList, enterQtyProductInDetails }
+  { sliceRandomProductList }
 )(HomeWithLocation);

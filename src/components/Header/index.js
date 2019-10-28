@@ -44,7 +44,7 @@ class Header extends Component {
       windowWidth,
       cartInfo
     } = this.props;
-    const { qtyProduct } = cartInfo;
+    const { cartList } = cartInfo;
     return (
       <div className={styles.wrapper} id="headerWrapper">
         <div className={isOpenHeader ? styles.sectionClose : styles.section}>
@@ -62,7 +62,7 @@ class Header extends Component {
               <img src="./img/logo-black.png" alt="logotype" />
             </div>
             <Nav className={styles} />
-            <BottomNav qtyProduct={qtyProduct} />
+            <BottomNav cartList={cartList} />
             <SocialLinks />
           </div>
         </div>
@@ -118,16 +118,14 @@ const SocialLinks = () => (
   </div>
 );
 
-const BottomNav = ({ qtyProduct }) => (
+const BottomNav = ({ cartList }) => (
   <div>
     <Link to="/cart" className={styles.btnItem}>
       <div className={styles.btnIcon}>
         <Basket />
       </div>
       Cart
-      <span className={styles.count}>
-        ({qtyProduct.length !== 0 ? qtyProduct : 0})
-      </span>
+      <span className={styles.count}>({cartList.length})</span>
     </Link>
     <div className={styles.btnItem}>
       <div className={styles.btnIcon}>

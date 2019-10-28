@@ -18,10 +18,11 @@ import ThreeArrows from "../../icons/ThreeArrows";
 
 class Product extends Component {
   componentDidMount() {
-    const { history, getProduct } = this.props;
+    const { history, getProduct, enterQtyProductInDetails } = this.props;
     const { pathname } = history.location;
     const idProduct = pathname.split("/")[2];
     getProduct(idProduct);
+    enterQtyProductInDetails(1);
   }
 
   render() {
@@ -39,8 +40,14 @@ class Product extends Component {
     const { error, loader, productData, sliderData } = productInfo;
     const { qtyProduct } = cartInfo;
     const { activeImg, imgList } = sliderData;
-    const { price, title, shortDescription, type } = productData;
-    if (error.length !== 0) {
+    const {
+      price,
+      title,
+      shortDescription,
+      type,
+      keyFeaturesText
+    } = productData;
+    if (error) {
       return <h4>ERROR: {error}</h4>;
     }
     return (
@@ -61,7 +68,10 @@ class Product extends Component {
         <div className={styles.info}>
           <div className={styles.price}>${price}</div>
           <div className={styles.title}>{title}</div>
-          <div className={styles.description}>{shortDescription}</div>
+          <div className={styles.description}>
+            <p>{shortDescription}</p>
+            <p> {keyFeaturesText}</p>
+          </div>
           <div className={styles.qty}>
             <p className={styles.qtyTitle}>Qty</p>
             <div className={styles.qtyCount}>
