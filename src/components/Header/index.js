@@ -14,13 +14,13 @@ import Twitter from "../../icons/Twitter";
 import Instagram from "../../icons/Instagram";
 
 import { changeMenuStatus } from "../../action/header";
-import { changeQtyProduct } from "../../action/cart";
 import { Link } from "react-router-dom";
+import { SIZE_SCREEN_PHONE } from "../../constants";
 
 class Header extends Component {
   componentDidMount() {
     const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
-    if (windowWidth > 767 && isOpenHeader) {
+    if (windowWidth > SIZE_SCREEN_PHONE && isOpenHeader) {
       changeMenuStatus();
     }
   }
@@ -28,29 +28,24 @@ class Header extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
     if (windowWidth !== prevProps.windowWidth) {
-      if (windowWidth > 767 && isOpenHeader) {
+      if (windowWidth > SIZE_SCREEN_PHONE && isOpenHeader) {
         changeMenuStatus();
       }
-      if (windowWidth <= 767 && !isOpenHeader) {
+      if (windowWidth <= SIZE_SCREEN_PHONE && !isOpenHeader) {
         changeMenuStatus();
       }
     }
   }
 
   render() {
-    const {
-      isOpenHeader,
-      changeMenuStatus,
-      windowWidth,
-      cartInfo
-    } = this.props;
-    const { cartList } = cartInfo;
+    const { isOpenHeader, changeMenuStatus, windowWidth } = this.props;
+
     return (
-      <div className={styles.wrapper} id="headerWrapper">
+      <div className={styles.wrapper}>
         <div className={isOpenHeader ? styles.sectionClose : styles.section}>
           <div
             className={
-              !isOpenHeader && windowWidth <= 767
+              !isOpenHeader && windowWidth <= SIZE_SCREEN_PHONE
                 ? styles.openMenu
                 : styles.closedMenu
             }
@@ -62,7 +57,7 @@ class Header extends Component {
               <img src="./img/logo-black.png" alt="logotype" />
             </div>
             <Nav className={styles} />
-            <BottomNav cartList={cartList} />
+            <BottomNavWithList />
             <SocialLinks />
           </div>
         </div>
@@ -125,7 +120,7 @@ const BottomNav = ({ cartList }) => (
         <Basket />
       </div>
       Cart
-      <span className={styles.count}>({cartList.length})</span>
+      <span className={styles.count}>({Object.values(cartList).length})</span>
     </Link>
     <div className={styles.btnItem}>
       <div className={styles.btnIcon}>
@@ -145,10 +140,13 @@ const BottomNav = ({ cartList }) => (
 const HeaderCheckSize = windowSize(Header);
 const HeaderCheckSizeWithLocation = withRouter(HeaderCheckSize);
 
+const BottomNavWithList = connect(({ cart }) => ({ cartList: cart.cartList }))(
+  BottomNav
+);
+
 export default connect(
-  ({ header, cart }) => ({
-    isOpenHeader: header,
-    cartInfo: cart
+  ({ header }) => ({
+    isOpenHeader: header
   }),
-  { changeMenuStatus, changeQtyProduct }
+  { changeMenuStatus }
 )(HeaderCheckSizeWithLocation);
