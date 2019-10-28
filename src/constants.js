@@ -15,3 +15,4 @@ export const ERROR_DATA_PRODUCTS = "ERROR_DATA_PRODUCTS";
 export const TOP_PRODUCT_LIST_LENGTH = 9;
 export const CHANGE_QTY_PRODUCT_UP = "up";
 export const CHANGE_QTY_PRODUCT_DOWN = "down";
+export const SIZE_SCREEN_PHONE = 767;

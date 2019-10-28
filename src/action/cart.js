@@ -9,18 +9,16 @@ import {
 export const addToCart = (idProduct, activeImg, title) => {
   return (dispatch, getState) => {
     const { cart } = getState();
-    const { qtyProduct, cartList } = cart;
-    let list = { ...cartList };
+    const { qtyProduct } = cart;
     const item = {
       id: idProduct,
       qty: qtyProduct,
       img: activeImg,
       title: title
     };
-    const addItemToList = (list, item) => ({ ...list, [item.id]: item });
     return dispatch({
       type: ADD_TO_CART,
-      payload: addItemToList(list, item)
+      payload: {item}
     });
   };
 };

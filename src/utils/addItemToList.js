@@ -1,0 +1,1 @@
+export const addItemToList = (list, item) => ({ ...list, [item.id]: item });

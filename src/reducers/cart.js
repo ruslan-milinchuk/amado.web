@@ -4,7 +4,7 @@ import {
   CHANGE_QTY_PRODUCT
 } from "../constants";
 
-const BASIC_STATE = { qtyProduct: "1", cartList: [] };
+const BASIC_STATE = { qtyProduct: 1, cartList: [] };
 
 export const cart = (state = BASIC_STATE, { type, payload }) => {
   switch (type) {
@@ -13,9 +13,10 @@ export const cart = (state = BASIC_STATE, { type, payload }) => {
       return { ...state, qtyProduct: payload };
 
     case ADD_TO_CART:
+      const { item } = payload;
       return {
         ...state,
-        cartList: Object.values(payload)
+        cartList: { ...state.cartList, [item.id]: item }
       };
 
     default:
