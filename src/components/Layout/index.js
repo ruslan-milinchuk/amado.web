@@ -9,8 +9,6 @@ import { enterQtyProductInDetails } from "../../action/cart";
 class Layout extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.location.pathname !== prevProps.location.pathname) {
-      const { enterQtyProductInDetails } = this.props;
-      enterQtyProductInDetails("");
       window.scrollTo(0, 0);
     }
   }
@@ -21,15 +19,14 @@ class Layout extends Component {
     return (
       <div className={style.wrapper}>
         {children}
-        <a
-          href="#headerWrapper"
+        <div
           className={
             scrollPosition > 300 ? `${style.scrollTop}` : `${style.dislayNone}`
           }
           onClick={() => scroll.scrollToTop()}
         >
           <TriangleTop />
-        </a>
+        </div>
       </div>
     );
   }

@@ -3,17 +3,24 @@ import {
   CHANGE_QTY_PRODUCT,
   CHANGE_QTY_PRODUCT_DOWN,
   CHANGE_QTY_PRODUCT_UP,
-  SET_QTY_ENTER_VALUE,
+  SET_QTY_ENTER_VALUE
 } from "../constants";
-
 
 export const addToCart = (idProduct, activeImg, title) => {
   return (dispatch, getState) => {
     const { cart } = getState();
-    const { qtyProduct } = cart;
+    const { qtyProduct, cartList } = cart;
+    let list = { ...cartList };
+    const item = {
+      id: idProduct,
+      qty: qtyProduct,
+      img: activeImg,
+      title: title
+    };
+    const addItemToList = (list, item) => ({ ...list, [item.id]: item });
     return dispatch({
       type: ADD_TO_CART,
-      payload: { idProduct, qtyProduct, activeImg, title }
+      payload: addItemToList(list, item)
     });
   };
 };
