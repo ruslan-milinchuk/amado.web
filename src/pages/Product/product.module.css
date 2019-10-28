@@ -29,7 +29,7 @@
 
 .linkTo:hover {
   cursor: pointer;
-  color: #fbc115;
+  color: #fbb710;
 }
 
 .titleLink {
@@ -201,6 +201,11 @@
   transform: translate(-50%, -50%);
 }
 
+.imgMain {
+  width: 100%;
+  height: auto;
+}
+
 .content {
   position: absolute;
   top: 0;
@@ -230,12 +235,20 @@
   }
 
   .info {
-    width: calc(100% - 40px);
+    width: 100%;
   }
 }
 
-@media screen and (max-width: 1008px) {
+@media screen and (max-width: 767px) {
   .wrapper {
     margin: 120px 0 50px;
+  }
+
+  .slider {
+    width: 100%;
+  }
+
+  .info {
+    width: calc(100% - 40px);
   }
 }

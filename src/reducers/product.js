@@ -9,14 +9,14 @@ const BASIC_STATE = {
   loader: false,
   productData: {},
   sliderData: {
-    allSliders: [],
-    slideActive: ""
+    imgList: [],
+    activeImg: ""
   }
 };
 export const product = (state = BASIC_STATE, { type, payload }) => {
   switch (type) {
     case START_DATA_PRODUCT_DETAILS:
-      return { ...state, loading: true };
+      return { ...state, loader: true };
 
     case SET_DATA_PRODUCT_DETAILS:
       const { slider } = payload;
@@ -24,19 +24,18 @@ export const product = (state = BASIC_STATE, { type, payload }) => {
       return {
         ...state,
         productData: payload,
-        sliderData: { allSliders: sliceSlider, slideActive: slider[0] }
+        sliderData: { imgList: sliceSlider, activeImg: slider[0] }
       };
 
     case END_DATA_PRODUCT_DETAILS:
-      return { ...state, loading: false };
+      return { ...state, loader: false };
 
-    // eslint-disable-next-line no-fallthrough
     case CHOOSE_IMG:
       const activeSlider = payload;
       const { sliderData } = state;
       return {
         ...state,
-        sliderData: { ...sliderData, slideActive: activeSlider }
+        sliderData: { ...sliderData, activeImg: activeSlider }
       };
 
     default:
