@@ -7,6 +7,7 @@ import Layout from "./components/Layout";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
+import Cart from "./pages/Cart";
 
 const history = createBrowserHistory();
 
@@ -17,6 +18,7 @@ const App = () => (
       <Route exact path="/" component={Home} />
       <Route exact path="/product/" component={Product} />
       <Route path="/product/:id" component={Product} />
+      <Route path="/cart" component={Cart} />
     </Layout>
     <Footer />
   </Router>

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import windowSize from "react-window-size";
-
+import { withRouter } from "react-router";
 import styles from "./header.module.css";
 
 import Nav from "../Nav";
@@ -14,6 +14,7 @@ import Twitter from "../../icons/Twitter";
 import Instagram from "../../icons/Instagram";
 
 import { changeMenuStatus } from "../../action/header";
+import { changeQtyProduct } from "../../action/cart";
 
 class Header extends Component {
   componentDidMount() {
@@ -36,7 +37,14 @@ class Header extends Component {
   }
 
   render() {
-    const { isOpenHeader, changeMenuStatus, windowWidth } = this.props;
+    const {
+      isOpenHeader,
+      changeMenuStatus,
+      windowWidth,
+      cartInfo,
+      history
+    } = this.props;
+    const { qtyProduct } = cartInfo;
     return (
       <div className={styles.wrapper} id="headerWrapper">
         <div className={isOpenHeader ? styles.sectionClose : styles.section}>
@@ -54,7 +62,7 @@ class Header extends Component {
               <img src="./img/logo-black.png" alt="logotype" />
             </div>
             <Nav className={styles} />
-            <BottomNav />
+            <BottomNav qtyProduct={qtyProduct} history={history} />
             <SocialLinks />
           </div>
         </div>
@@ -110,14 +118,16 @@ const SocialLinks = () => (
   </div>
 );
 
-const BottomNav = () => (
+const BottomNav = ({ qtyProduct, history }) => (
   <div>
-    <div className={styles.btnItem}>
+    <div className={styles.btnItem} onClick={() => history.push("/cart")}>
       <div className={styles.btnIcon}>
         <Basket />
       </div>
       Cart
-      <span className={styles.count}>(0)</span>
+      <span className={styles.count}>
+        ({qtyProduct.length !== 0 ? qtyProduct : 0})
+      </span>
     </div>
     <div className={styles.btnItem}>
       <div className={styles.btnIcon}>
@@ -135,10 +145,12 @@ const BottomNav = () => (
 );
 
 const HeaderCheckSize = windowSize(Header);
+const HeaderCheckSizeWithLocation = withRouter(HeaderCheckSize);
 
 export default connect(
-  ({ header }) => ({
-    isOpenHeader: header
+  ({ header, cart }) => ({
+    isOpenHeader: header,
+    cartInfo: cart
   }),
-  { changeMenuStatus }
-)(HeaderCheckSize);
+  { changeMenuStatus, changeQtyProduct }
+)(HeaderCheckSizeWithLocation);

@@ -6,8 +6,9 @@ const TriangleTop = () => (
     id="Capa_1"
     x="0px"
     y="0px"
+    width="15px"
     viewBox="0 0 612.002 612.002"
-    fill = "currentColor"
+    fill="currentColor"
   >
     <path
       d="M592.639,358.376L423.706,189.439c-64.904-64.892-170.509-64.892-235.421,0.005L19.363,358.379
@@ -19,4 +20,3 @@ const TriangleTop = () => (
 );
 
 export default TriangleTop;
-

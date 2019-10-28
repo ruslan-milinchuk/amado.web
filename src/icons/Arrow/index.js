@@ -9,7 +9,7 @@ const Arrow = () => (
     width="10px"
     height="10px"
     viewBox="0 0 292.362 292.361"
-		fill="currentColor"
+    fill="currentColor"
   >
     <path
       d="M286.935,197.287L159.028,69.381c-3.613-3.617-7.895-5.424-12.847-5.424s-9.233,1.807-12.85,5.424L5.424,197.287

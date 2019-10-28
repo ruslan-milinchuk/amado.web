@@ -5,7 +5,7 @@ import styles from "./product.module.css";
 import { getProduct, chooseImg } from "../../action/product";
 import {
   changeQtyProduct,
-  changeEnteredValue,
+  enterQtyProductInDetails,
   addToCart
 } from "../../action/cart";
 import Arrow from "../../icons/Arrow";
@@ -18,10 +18,11 @@ import ThreeArrows from "../../icons/ThreeArrows";
 
 class Product extends Component {
   componentDidMount() {
-    const { history, getProduct } = this.props;
+    const { history, getProduct, enterQtyProductInDetails } = this.props;
     const { pathname } = history.location;
     const idProduct = pathname.split("/")[2];
     getProduct(idProduct);
+    enterQtyProductInDetails("");
   }
 
   render() {
@@ -29,16 +30,16 @@ class Product extends Component {
       productInfo,
       cartInfo,
       changeQtyProduct,
-      changeEnteredValue,
+      enterQtyProductInDetails,
       chooseImg,
-      addToCart
+      addToCart,
+      history
     } = this.props;
-    const { history } = this.props;
     const { pathname } = history.location;
     const idProduct = pathname.split("/")[2];
     const { loader, productData, sliderData } = productInfo;
     const { qtyProduct } = cartInfo;
-    const { slideActive, allSliders } = sliderData;
+    const { activeImg, imgList } = sliderData;
     const { price, title, shortDescription, type } = productData;
     return (
       <div className={styles.wrapper}>
@@ -50,8 +51,8 @@ class Product extends Component {
           <h4 className={styles.titleLink}> {title}</h4>
         </div>
         <Slider
-          listImg={allSliders}
-          slideActive={slideActive}
+          listImg={imgList}
+          activeImg={activeImg}
           chooseImg={chooseImg}
           loader={loader}
         />
@@ -65,7 +66,7 @@ class Product extends Component {
               <input
                 className={styles.input}
                 onChange={event =>
-                  changeEnteredValue(parseInt(event.target.value))
+                  enterQtyProductInDetails(parseInt(event.target.value))
                 }
                 type="text"
                 placeholder="Input field"
@@ -87,7 +88,10 @@ class Product extends Component {
               </div>
             </div>
           </div>
-          <div className={styles.btn} onClick={() => addToCart(idProduct)}>
+          <div
+            className={styles.btn}
+            onClick={() => btnStatus(idProduct, qtyProduct, addToCart)}
+          >
             Add to cart
           </div>
         </div>
@@ -96,7 +100,7 @@ class Product extends Component {
   }
 }
 
-const Slider = ({ listImg, slideActive, chooseImg, loader }) => {
+const Slider = ({ listImg, activeImg, chooseImg, loader }) => {
   if (loader) {
     return (
       <div className={styles.loading}>
@@ -110,39 +114,41 @@ const Slider = ({ listImg, slideActive, chooseImg, loader }) => {
           <div className={`${styles.inner} ${styles.correlationHeight}`}>
             <div className={styles.content}>
               <img
-                className={`${styles.img} ${styles.imgLarge}`}
-                src={slideActive.large}
+                className={`${styles.img} ${styles.imgMain}`}
+                src={activeImg.large}
                 alt="product"
               />
             </div>
           </div>
         </div>
         <div className={styles.list}>
-          {listImg
-            ? listImg.map(({ id, small, large }, index) => (
-                <div
-                  key={id}
-                  className={
-                    slideActive.large === large
-                      ? `${styles.item} ${styles.itemActive}`
-                      : `${styles.item}`
-                  }
-                  onClick={() => chooseImg(index)}
-                >
-                  <div
-                    className={`${styles.inner} ${styles.correlationHeight}`}
-                  >
-                    <div className={styles.content}>
-                      <img className={styles.img} src={small} alt="product" />
-                    </div>
-                  </div>
+          {listImg.map(({ id, small, large }, index) => (
+            <div
+              key={id}
+              className={
+                activeImg.large === large
+                  ? `${styles.item} ${styles.itemActive}`
+                  : `${styles.item}`
+              }
+              onClick={() => chooseImg(index)}
+            >
+              <div className={`${styles.inner} ${styles.correlationHeight}`}>
+                <div className={styles.content}>
+                  <img className={styles.img} src={small} alt="product" />
                 </div>
-              ))
-            : true}
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );
   }
+};
+
+const btnStatus = (idProduct, qtyProduct, addToCart) => {
+  if (qtyProduct.length === 0) {
+    return null;
+  } else return addToCart(idProduct);
 };
 
 const ProductWithLocation = withRouter(Product);
@@ -152,5 +158,11 @@ export default connect(
     productInfo: product,
     cartInfo: cart
   }),
-  { getProduct, changeQtyProduct, changeEnteredValue, chooseImg, addToCart }
+  {
+    getProduct,
+    changeQtyProduct,
+    enterQtyProductInDetails,
+    chooseImg,
+    addToCart
+  }
 )(ProductWithLocation);
