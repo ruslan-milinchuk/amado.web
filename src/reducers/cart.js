@@ -1,11 +1,10 @@
 import {
   ADD_TO_CART,
   SET_QTY_ENTER_VALUE,
-  CHANGE_QTY_PRODUCT,
-  GET_PRODUCTS_DETAILS_CART
+  CHANGE_QTY_PRODUCT
 } from "../constants";
 
-const BASIC_STATE = { qtyProduct: "", cartList: [], cartWithDetails: [] };
+const BASIC_STATE = { qtyProduct: "", cartList: [] };
 
 export const cart = (state = BASIC_STATE, { type, payload }) => {
   switch (type) {
@@ -15,11 +14,14 @@ export const cart = (state = BASIC_STATE, { type, payload }) => {
 
     case ADD_TO_CART:
       const { cartList } = state;
-      const { idProduct, qtyProduct } = payload;
+      const { idProduct, qtyProduct, activeImg, title } = payload;
       if (cartList.findIndex(item => item.id === idProduct) === -1) {
         return {
           ...state,
-          cartList: [...cartList, { id: idProduct, qty: qtyProduct }]
+          cartList: [
+            ...cartList,
+            { id: idProduct, qty: qtyProduct, img: activeImg, title: title }
+          ]
         };
       }
 
@@ -27,15 +29,10 @@ export const cart = (state = BASIC_STATE, { type, payload }) => {
         const newState = { ...state };
         newState.cartList.map(item => {
           if (item.id === idProduct) {
-            item.qty = qtyProduct;
           }
           return newState;
         });
       }
-
-    case GET_PRODUCTS_DETAILS_CART:
-      const { detailsProduct } = payload;
-      return { ...state, detailsProduct };
 
     default:
       return state;

@@ -2,10 +2,12 @@ import {
   CHOOSE_IMG,
   END_DATA_PRODUCT_DETAILS,
   SET_DATA_PRODUCT_DETAILS,
-  START_DATA_PRODUCT_DETAILS
+  START_DATA_PRODUCT_DETAILS,
+  ERROR_DATA_PRODUCTS
 } from "../constants";
 
 const BASIC_STATE = {
+  error: "",
   loader: false,
   productData: {},
   sliderData: {
@@ -36,6 +38,12 @@ export const product = (state = BASIC_STATE, { type, payload }) => {
       return {
         ...state,
         sliderData: { ...sliderData, activeImg: activeSlider }
+      };
+
+    case ERROR_DATA_PRODUCTS:
+      return {
+        ...state,
+        sliderData: { ...sliderData, error: payload }
       };
 
     default:

@@ -8,20 +8,22 @@ import { enterQtyProductInDetails } from "../../action/cart";
 
 class Home extends Component {
   componentDidMount() {
-    const { sliceRandomProductList, enterQtyProductInDetails } = this.props;
+    const { sliceRandomProductList } = this.props;
     sliceRandomProductList();
-    enterQtyProductInDetails("");
   }
 
   render() {
     const { homeDetails, history } = this.props;
-    const { sliceTopProduct, loader } = homeDetails;
+    const { error, sliceTopProduct, loader } = homeDetails;
     if (loader) {
       return (
         <div className={styles.wrapper}>
           <Loading />
         </div>
       );
+    }
+    if (error.length !== 0) {
+      return <h4>ERROR: {error}</h4>;
     }
     return (
       <div className={styles.wrapper}>

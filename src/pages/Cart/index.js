@@ -1,18 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  enterQtyProductInDetails,
-  getProductsDetailsCart
-} from "../../action/cart";
+import { enterQtyProductInDetails } from "../../action/cart";
 
 class Cart extends Component {
-  componentDidMount() {
-    const { enterQtyProductInDetails, getProductsDetailsCart } = this.props;
-    enterQtyProductInDetails("");
-    getProductsDetailsCart();
-  }
-
   render() {
+    const { cartInfo } = this.props;
     return <div />;
   }
 }
@@ -22,7 +14,6 @@ export default connect(
     cartInfo: cart
   }),
   {
-    enterQtyProductInDetails,
-    getProductsDetailsCart
+    enterQtyProductInDetails
   }
 )(Cart);

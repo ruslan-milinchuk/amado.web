@@ -18,11 +18,10 @@ import ThreeArrows from "../../icons/ThreeArrows";
 
 class Product extends Component {
   componentDidMount() {
-    const { history, getProduct, enterQtyProductInDetails } = this.props;
+    const { history, getProduct } = this.props;
     const { pathname } = history.location;
     const idProduct = pathname.split("/")[2];
     getProduct(idProduct);
-    enterQtyProductInDetails("");
   }
 
   render() {
@@ -37,10 +36,13 @@ class Product extends Component {
     } = this.props;
     const { pathname } = history.location;
     const idProduct = pathname.split("/")[2];
-    const { loader, productData, sliderData } = productInfo;
+    const { error, loader, productData, sliderData } = productInfo;
     const { qtyProduct } = cartInfo;
     const { activeImg, imgList } = sliderData;
     const { price, title, shortDescription, type } = productData;
+    if (error.length !== 0) {
+      return <h4>ERROR: {error}</h4>;
+    }
     return (
       <div className={styles.wrapper}>
         <div className={styles.nav}>
@@ -88,12 +90,13 @@ class Product extends Component {
               </div>
             </div>
           </div>
-          <div
+          <button
             className={styles.btn}
-            onClick={() => btnStatus(idProduct, qtyProduct, addToCart)}
+            disabled={qtyProduct.length <= 0}
+            onClick={() => addToCart(idProduct, activeImg, title)}
           >
             Add to cart
-          </div>
+          </button>
         </div>
       </div>
     );
@@ -107,48 +110,41 @@ const Slider = ({ listImg, activeImg, chooseImg, loader }) => {
         <Loading />
       </div>
     );
-  } else {
-    return (
-      <div className={styles.slider}>
-        <div className={styles.slide}>
-          <div className={`${styles.inner} ${styles.correlationHeight}`}>
-            <div className={styles.content}>
-              <img
-                className={`${styles.img} ${styles.imgMain}`}
-                src={activeImg.large}
-                alt="product"
-              />
-            </div>
+  }
+  return (
+    <div className={styles.slider}>
+      <div className={styles.slide}>
+        <div className={`${styles.inner} ${styles.correlationHeight}`}>
+          <div className={styles.content}>
+            <img
+              className={`${styles.img} ${styles.imgMain}`}
+              src={activeImg.large}
+              alt="product"
+            />
           </div>
         </div>
-        <div className={styles.list}>
-          {listImg.map(({ id, small, large }, index) => (
-            <div
-              key={id}
-              className={
-                activeImg.large === large
-                  ? `${styles.item} ${styles.itemActive}`
-                  : `${styles.item}`
-              }
-              onClick={() => chooseImg(index)}
-            >
-              <div className={`${styles.inner} ${styles.correlationHeight}`}>
-                <div className={styles.content}>
-                  <img className={styles.img} src={small} alt="product" />
-                </div>
+      </div>
+      <div className={styles.list}>
+        {listImg.map(({ id, small, large }, index) => (
+          <div
+            key={id}
+            className={
+              activeImg.large === large
+                ? `${styles.item} ${styles.itemActive}`
+                : `${styles.item}`
+            }
+            onClick={() => chooseImg(index)}
+          >
+            <div className={`${styles.inner} ${styles.correlationHeight}`}>
+              <div className={styles.content}>
+                <img className={styles.img} src={small} alt="product" />
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
-    );
-  }
-};
-
-const btnStatus = (idProduct, qtyProduct, addToCart) => {
-  if (qtyProduct.length === 0) {
-    return null;
-  } else return addToCart(idProduct);
+    </div>
+  );
 };
 
 const ProductWithLocation = withRouter(Product);

@@ -129,7 +129,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 250px;
+  min-width: 250px;
   height: 75px;
   color: #ffffff;
   border: none;
@@ -141,6 +141,7 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 50px;
+  outline: none;
 }
 
 .btn:hover {

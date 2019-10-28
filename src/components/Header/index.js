@@ -15,6 +15,7 @@ import Instagram from "../../icons/Instagram";
 
 import { changeMenuStatus } from "../../action/header";
 import { changeQtyProduct } from "../../action/cart";
+import { Link } from "react-router-dom";
 
 class Header extends Component {
   componentDidMount() {
@@ -41,8 +42,7 @@ class Header extends Component {
       isOpenHeader,
       changeMenuStatus,
       windowWidth,
-      cartInfo,
-      history
+      cartInfo
     } = this.props;
     const { qtyProduct } = cartInfo;
     return (
@@ -62,7 +62,7 @@ class Header extends Component {
               <img src="./img/logo-black.png" alt="logotype" />
             </div>
             <Nav className={styles} />
-            <BottomNav qtyProduct={qtyProduct} history={history} />
+            <BottomNav qtyProduct={qtyProduct} />
             <SocialLinks />
           </div>
         </div>
@@ -118,9 +118,9 @@ const SocialLinks = () => (
   </div>
 );
 
-const BottomNav = ({ qtyProduct, history }) => (
+const BottomNav = ({ qtyProduct }) => (
   <div>
-    <div className={styles.btnItem} onClick={() => history.push("/cart")}>
+    <Link to="/cart" className={styles.btnItem}>
       <div className={styles.btnIcon}>
         <Basket />
       </div>
@@ -128,7 +128,7 @@ const BottomNav = ({ qtyProduct, history }) => (
       <span className={styles.count}>
         ({qtyProduct.length !== 0 ? qtyProduct : 0})
       </span>
-    </div>
+    </Link>
     <div className={styles.btnItem}>
       <div className={styles.btnIcon}>
         <Star />
