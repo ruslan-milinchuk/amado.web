@@ -14,7 +14,10 @@ export const getProduct = idProduct => {
     if (res.status === 200) {
       dispatch({ type: END_DATA_PRODUCT_DETAILS });
     } else {
-      return dispatch({ type: ERROR_DATA_PRODUCT_DETAILS });
+      return dispatch({
+        type: ERROR_DATA_PRODUCT_DETAILS,
+        payload: "FALL get product details"
+      });
     }
     const data = await res.json();
     dispatch({ type: SET_DATA_PRODUCT_DETAILS, payload: data });

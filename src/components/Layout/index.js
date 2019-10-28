@@ -4,9 +4,13 @@ import style from "./layout.module.css";
 import TriangleTop from "../../icons/TriangleTop";
 import withScroll from "../withScroll";
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
+import { enterQtyProductInDetails } from "../../action/cart";
 class Layout extends Component {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (this.props.location.pathname !== prevProps.location.pathname) {
+      const { enterQtyProductInDetails } = this.props;
+      enterQtyProductInDetails("");
       window.scrollTo(0, 0);
     }
   }
@@ -31,5 +35,13 @@ class Layout extends Component {
   }
 }
 
-const LayoutCheckScroll = withScroll(Layout);
-export default withRouter(LayoutCheckScroll);
+const LayoutScroll = withScroll(Layout);
+const LayoutScrollWithLocation = withRouter(LayoutScroll);
+export default connect(
+  ({ cart }) => ({
+    cartInfo: cart
+  }),
+  {
+    enterQtyProductInDetails
+  }
+)(LayoutScrollWithLocation);
