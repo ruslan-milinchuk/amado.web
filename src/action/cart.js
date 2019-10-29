@@ -1,12 +1,15 @@
 import {
   ADD_TO_CART,
   CHANGE_QTY_PRODUCT,
+  CHANGE_QTY_PRODUCT_CART,
   CHANGE_QTY_PRODUCT_DOWN,
+  CHANGE_QTY_PRODUCT_CART_DOWN,
   CHANGE_QTY_PRODUCT_UP,
+  CHANGE_QTY_PRODUCT_CART_UP,
   SET_QTY_ENTER_VALUE
 } from "../constants";
 
-export const addToCart = (idProduct, activeImg, title) => {
+export const addToCart = (idProduct, activeImg, title, price) => {
   return (dispatch, getState) => {
     const { cart } = getState();
     const { qtyProduct } = cart;
@@ -14,19 +17,48 @@ export const addToCart = (idProduct, activeImg, title) => {
       id: idProduct,
       qty: qtyProduct,
       img: activeImg,
-      title: title
+      title: title,
+      price: price
     };
     return dispatch({
       type: ADD_TO_CART,
-      payload: {item}
+      payload: { item }
     });
   };
 };
 
-export const changeQtyProduct = controlQty => {
+export const changeQtyProduct = (controlQty, item) => {
   return (dispatch, getState) => {
     const { cart } = getState();
     const { qtyProduct } = cart;
+    if (item) {
+      const { id, qty, img, title, price } = item;
+      const itemCart = {
+        id: id,
+        qty: qty,
+        img: img,
+        title: title,
+        price: price
+      };
+      if (controlQty === CHANGE_QTY_PRODUCT_CART_UP) {
+        if (item.qty + 1 <= 300) {
+          dispatch({
+            type: CHANGE_QTY_PRODUCT_CART,
+            payload: { qty: parseInt(item.qty + 1), itemCart }
+          });
+        }
+      }
+
+      if (controlQty === CHANGE_QTY_PRODUCT_CART_DOWN) {
+        if (item.qty - 1 > 0) {
+          dispatch({
+            type: CHANGE_QTY_PRODUCT_CART,
+            payload: { qty: item.qty - 1, itemCart }
+          });
+        }
+      }
+    }
+
     if (controlQty === CHANGE_QTY_PRODUCT_UP) {
       const newQty = parseInt(qtyProduct + 1);
       if (qtyProduct + 1 <= 300) {

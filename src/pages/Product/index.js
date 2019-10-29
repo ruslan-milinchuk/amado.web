@@ -103,7 +103,7 @@ class Product extends Component {
           <button
             className={styles.btn}
             disabled={qtyProduct.length <= 0}
-            onClick={() => addToCart(idProduct, activeImg, title)}
+            onClick={() => addToCart(idProduct, activeImg, title, price)}
           >
             Add to cart
           </button>

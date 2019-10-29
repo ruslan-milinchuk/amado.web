@@ -16,6 +16,7 @@ import Instagram from "../../icons/Instagram";
 import { changeMenuStatus } from "../../action/header";
 import { Link } from "react-router-dom";
 import { SIZE_SCREEN_PHONE } from "../../constants";
+import { isEmpty } from "../../utils/isEmpty";
 
 class Header extends Component {
   componentDidMount() {
@@ -39,7 +40,6 @@ class Header extends Component {
 
   render() {
     const { isOpenHeader, changeMenuStatus, windowWidth } = this.props;
-
     return (
       <div className={styles.wrapper}>
         <div className={isOpenHeader ? styles.sectionClose : styles.section}>
@@ -115,7 +115,14 @@ const SocialLinks = () => (
 
 const BottomNav = ({ cartList }) => (
   <div>
-    <Link to="/cart" className={styles.btnItem}>
+    <Link
+      to="/cart"
+      className={
+        isEmpty(cartList)
+          ? `${styles.unactive} ${styles.btnItem}`
+          : styles.btnItem
+      }
+    >
       <div className={styles.btnIcon}>
         <Basket />
       </div>
