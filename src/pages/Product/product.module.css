@@ -74,6 +74,7 @@
 .qty {
   display: flex;
   align-items: center;
+  margin-top: 30px;
 }
 
 .qtyCount {
