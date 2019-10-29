@@ -21,7 +21,7 @@ class Layout extends Component {
         {children}
         <div
           className={
-            scrollPosition > 300 ? `${style.scrollTop}` : `${style.dislayNone}`
+            scrollPosition > 300 ? `${style.scrollTop}` : `${style.displayNone}`
           }
           onClick={() => scroll.scrollToTop()}
         >

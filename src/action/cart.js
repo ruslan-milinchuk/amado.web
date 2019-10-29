@@ -6,11 +6,28 @@ import {
   CHANGE_QTY_PRODUCT_CART_DOWN,
   CHANGE_QTY_PRODUCT_UP,
   CHANGE_QTY_PRODUCT_CART_UP,
-  SET_QTY_ENTER_VALUE
+  SET_QTY_ENTER_VALUE,
+  CHECK_LOCAL_STORAGE,
+  CART_STORAGE
 } from "../constants";
 
+import { setCartToStorage } from "../utils/setCartToStorage";
+import { getCartFromStorage } from "../utils/getCartFromStorage";
+
+export const checkLocalStorage = () => {
+  return async dispatch => {
+    const cartFromStorage = await getCartFromStorage(CART_STORAGE);
+    if (cartFromStorage) {
+      return dispatch({
+        type: CHECK_LOCAL_STORAGE,
+        payload: cartFromStorage
+      });
+    }
+  };
+};
+
 export const addToCart = (idProduct, activeImg, title, price) => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const { cart } = getState();
     const { qtyProduct } = cart;
     const item = {
@@ -20,6 +37,10 @@ export const addToCart = (idProduct, activeImg, title, price) => {
       title: title,
       price: price
     };
+    await setCartToStorage(CART_STORAGE, {
+      ...cart.cartList,
+      [item.id]: item
+    });
     return dispatch({
       type: ADD_TO_CART,
       payload: { item }
@@ -28,7 +49,7 @@ export const addToCart = (idProduct, activeImg, title, price) => {
 };
 
 export const changeQtyProduct = (controlQty, item) => {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     const { cart } = getState();
     const { qtyProduct } = cart;
     if (item) {
@@ -41,6 +62,10 @@ export const changeQtyProduct = (controlQty, item) => {
         price: price
       };
       if (controlQty === CHANGE_QTY_PRODUCT_CART_UP && item.qty + 1 <= 300) {
+        await setCartToStorage(CART_STORAGE, {
+          ...cart.cartList,
+          [item.id]: { ...item, qty: qty + 1 }
+        });
         dispatch({
           type: CHANGE_QTY_PRODUCT_CART,
           payload: { qty: parseInt(item.qty + 1), itemCart }
@@ -48,6 +73,10 @@ export const changeQtyProduct = (controlQty, item) => {
       }
 
       if (controlQty === CHANGE_QTY_PRODUCT_CART_DOWN && item.qty - 1 > 0) {
+        await setCartToStorage(CART_STORAGE, {
+          ...cart.cartList,
+          [item.id]: { ...item, qty: qty - 1 }
+        });
         dispatch({
           type: CHANGE_QTY_PRODUCT_CART,
           payload: { qty: item.qty - 1, itemCart }
@@ -63,7 +92,7 @@ export const changeQtyProduct = (controlQty, item) => {
     }
 
     if (controlQty === CHANGE_QTY_PRODUCT_DOWN) {
-      const newQty = parseInt(qtyProduct - 1);
+      const newQty = qtyProduct - 1;
       if (qtyProduct - 1 > 0) {
         dispatch({ type: CHANGE_QTY_PRODUCT, payload: newQty });
       }
