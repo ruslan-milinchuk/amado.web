@@ -17,7 +17,7 @@ import { changeMenuStatus } from "../../action/header";
 import { Link } from "react-router-dom";
 import { SIZE_SCREEN_PHONE } from "../../constants";
 import { isEmpty } from "../../utils/isEmpty";
-
+import { checkLocalStorage } from "../../action/cart";
 class Header extends Component {
   componentDidMount() {
     const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
@@ -113,43 +113,57 @@ const SocialLinks = () => (
   </div>
 );
 
-const BottomNav = ({ cartList }) => (
-  <div>
-    <Link
-      to="/cart"
-      className={
-        isEmpty(cartList)
-          ? `${styles.unactive} ${styles.btnItem}`
-          : styles.btnItem
-      }
-    >
-      <div className={styles.btnIcon}>
-        <Basket />
+class BottomNav extends Component {
+  componentDidMount() {
+    const { checkLocalStorage } = this.props;
+    checkLocalStorage();
+  }
+
+  render() {
+    const { cartList } = this.props;
+
+    return (
+      <div>
+        <Link
+          to="/cart"
+          className={
+            isEmpty(cartList)
+              ? `${styles.unactive} ${styles.btnItem}`
+              : styles.btnItem
+          }
+        >
+          <div className={styles.btnIcon}>
+            <Basket />
+          </div>
+          Cart
+          <span className={styles.count}>
+            ({Object.values(cartList).length})
+          </span>
+        </Link>
+        <div className={styles.btnItem}>
+          <div className={styles.btnIcon}>
+            <Star />
+          </div>
+          Favorite
+        </div>
+        <div className={styles.btnItem}>
+          <div className={styles.btnIcon}>
+            <Search />
+          </div>
+          Search
+        </div>
       </div>
-      Cart
-      <span className={styles.count}>({Object.values(cartList).length})</span>
-    </Link>
-    <div className={styles.btnItem}>
-      <div className={styles.btnIcon}>
-        <Star />
-      </div>
-      Favorite
-    </div>
-    <div className={styles.btnItem}>
-      <div className={styles.btnIcon}>
-        <Search />
-      </div>
-      Search
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 const HeaderCheckSize = windowSize(Header);
 const HeaderCheckSizeWithLocation = withRouter(HeaderCheckSize);
 
-const BottomNavWithList = connect(({ cart }) => ({ cartList: cart.cartList }))(
-  BottomNav
-);
+const BottomNavWithList = connect(
+  ({ cart }) => ({ cartList: cart.cartList }),
+  { checkLocalStorage }
+)(BottomNav);
 
 export default connect(
   ({ header }) => ({

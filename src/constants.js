@@ -12,6 +12,7 @@ export const SET_DATA_PRODUCT_DETAILS = "SET_DATA_PRODUCT_DETAILS";
 export const ADD_TO_CART = "ADD_TO_CART";
 export const ERROR_DATA_PRODUCT_DETAILS = "ERROR_DATA_PRODUCT_DETAILS";
 export const ERROR_DATA_PRODUCTS = "ERROR_DATA_PRODUCTS";
+export const CHECK_LOCAL_STORAGE = "CHECK_LOCAL_STORAGE";
 
 export const TOP_PRODUCT_LIST_LENGTH = 9;
 export const CHANGE_QTY_PRODUCT_UP = "up";
@@ -20,3 +21,4 @@ export const CHANGE_QTY_PRODUCT_DOWN = "down";
 export const CHANGE_QTY_PRODUCT_CART_DOWN = "down qty cart";
 export const SIZE_SCREEN_PHONE = 767;
 export const DELIVERY = 55;
+export const CART_STORAGE = "amado/cart";
