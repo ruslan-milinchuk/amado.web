@@ -141,6 +141,10 @@
   cursor: pointer;
 }
 
+.item:last-child {
+  display: none;
+}
+
 .item:hover {
   color: #fbb710;
 }

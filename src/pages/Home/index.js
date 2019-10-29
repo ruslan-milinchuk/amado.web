@@ -37,7 +37,7 @@ class Home extends Component {
                 <div className={styles.content}>
                   <div className={styles.info}>
                     <p className={styles.price}>From ${price}</p>
-                    <h4 className={styles.title}>From {title}</h4>
+                    <h4 className={styles.title}>{title}</h4>
                   </div>
 
                   <img

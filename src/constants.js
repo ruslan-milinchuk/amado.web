@@ -19,3 +19,4 @@ export const CHANGE_QTY_PRODUCT_CART_UP = "up qty cart";
 export const CHANGE_QTY_PRODUCT_DOWN = "down";
 export const CHANGE_QTY_PRODUCT_CART_DOWN = "down qty cart";
 export const SIZE_SCREEN_PHONE = 767;
+export const DELIVERY = 55;

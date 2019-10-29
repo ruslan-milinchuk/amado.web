@@ -40,22 +40,18 @@ export const changeQtyProduct = (controlQty, item) => {
         title: title,
         price: price
       };
-      if (controlQty === CHANGE_QTY_PRODUCT_CART_UP) {
-        if (item.qty + 1 <= 300) {
-          dispatch({
-            type: CHANGE_QTY_PRODUCT_CART,
-            payload: { qty: parseInt(item.qty + 1), itemCart }
-          });
-        }
+      if (controlQty === CHANGE_QTY_PRODUCT_CART_UP && item.qty + 1 <= 300) {
+        dispatch({
+          type: CHANGE_QTY_PRODUCT_CART,
+          payload: { qty: parseInt(item.qty + 1), itemCart }
+        });
       }
 
-      if (controlQty === CHANGE_QTY_PRODUCT_CART_DOWN) {
-        if (item.qty - 1 > 0) {
-          dispatch({
-            type: CHANGE_QTY_PRODUCT_CART,
-            payload: { qty: item.qty - 1, itemCart }
-          });
-        }
+      if (controlQty === CHANGE_QTY_PRODUCT_CART_DOWN && item.qty - 1 > 0) {
+        dispatch({
+          type: CHANGE_QTY_PRODUCT_CART,
+          payload: { qty: item.qty - 1, itemCart }
+        });
       }
     }
 
