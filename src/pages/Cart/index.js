@@ -4,14 +4,13 @@ import { connect } from "react-redux";
 import { changeQtyProduct } from "../../action/cart";
 import {
   CHANGE_QTY_PRODUCT_CART_DOWN,
-  CHANGE_QTY_PRODUCT_CART_UP
+  CHANGE_QTY_PRODUCT_CART_UP,
+  DELIVERY
 } from "../../constants";
 
 class Cart extends Component {
   render() {
     const { cartList, changeQtyProduct } = this.props;
-    const [cartListArr] = Object.values(cartList);
-    const { price } = cartListArr;
     return (
       <div className={styles.wrapper}>
         <div className={styles.selectedCart}>
@@ -26,17 +25,18 @@ class Cart extends Component {
         </div>
         <div className={styles.info}>
           <h5 className={styles.infoTitle}>cart total</h5>
-          <div className={styles.infoContext}>
+          <div>
             <div className={styles.infoItem}>
               <p>subtotal:</p>
-              <p>${price}</p>
+              <p>${cartTotal(cartList).subtotal.toFixed(2)}</p>
             </div>
             <div className={styles.infoItem}>
               <p>delivery:</p>
+              <p>${DELIVERY}</p>
             </div>
             <div className={styles.infoItem}>
               <p>total:</p>
-              <p>{price}</p>
+              <p>${cartTotal(cartList).total.toFixed(2)}</p>
             </div>
           </div>
           <div className={styles.btn}>Checkout</div>
@@ -83,6 +83,15 @@ const CartList = ({ cartList, changeQtyProduct }) =>
       </div>
     </div>
   ));
+
+const cartTotal = cartList => {
+  let cartTotal = { subtotal: 0, total: 0 };
+  cartTotal.subtotal = Object.values(cartList).reduce(function(sum, current) {
+    return sum + current.price * current.qty;
+  }, 0);
+  cartTotal.total = cartTotal.subtotal + DELIVERY;
+  return cartTotal;
+};
 
 export default connect(
   ({ cart }) => ({ cartList: cart.cartList }),

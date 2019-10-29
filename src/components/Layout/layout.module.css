@@ -1,5 +1,5 @@
 .wrapper {
-  min-height: calc(100vh);
+  min-height: 730px;
   overflow: hidden;
 }
 
@@ -34,6 +34,11 @@
 }
 
 @media screen and (max-width: 767px) {
+  .wrapper {
+    min-height: calc(100vh - 270px);
+    overflow: hidden;
+  }
+
   .scrollTop {
     right: 30px;
     bottom: 30px;

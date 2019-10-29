@@ -130,14 +130,7 @@
 .qtyControl:hover {
   color: #6b6b6b;
 }
-.infoContext {
-}
-.subtotal {
-}
-.delivery {
-}
-.total {
-}
+
 .btn {
   display: flex;
   align-items: center;
@@ -174,7 +167,7 @@
 
   .info {
     width: calc(100% - 70px);
-    margin: 100px 0 15px;
+    margin: 100px 15px 15px;
   }
 }
 
