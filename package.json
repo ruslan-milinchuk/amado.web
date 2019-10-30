@@ -14,6 +14,7 @@
     "react-scroll": "^1.7.14",
     "react-window-size": "^1.2.2",
     "redux": "^4.0.4",
+    "redux-form": "^8.2.6",
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
