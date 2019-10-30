@@ -1,0 +1,146 @@
+.wrapper {
+  width: calc(100% - 320px);
+  margin-left: 320px;
+}
+.title {
+  width: 100%;
+  font-size: 30px;
+  color: #242424;
+  line-height: 1.3;
+  font-weight: 700;
+  margin: 131px 0 30px 20px;
+}
+.form {
+  display: flex;
+  align-items: end;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.fieldWrapper {
+  width: 100%;
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
+.field {
+  width: 100%;
+  background-color: #f5f7fa;
+  font-size: 14px;
+  color: #6b6b6b;
+  text-transform: capitalize;
+  font-weight: 700;
+  max-height: 50px;
+  padding: 30px;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+}
+
+.inputs {
+  width: calc(66.6% - 30px);
+  display: inline-block;
+  margin: 0 15px;
+}
+
+.name,
+.code {
+  width: calc(50% - 10px);
+  margin-right: 10px;
+}
+
+.surname,
+.phone {
+  width: calc(50% - 10px);
+  margin-left: 10px;
+}
+
+.textarea {
+  max-height: 200px;
+  height: 200px;
+}
+.checkbox {
+  display: none;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #212529;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.checkbox input {
+  cursor: pointer;
+  display: none;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+.label > i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  position: relative;
+  background: #dee2e6;
+  margin-right: 5px;
+}
+
+.label > i:before {
+  content: "";
+  position: absolute;
+  top: 1px;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  background: #007bff;
+  border-radius: 3px;
+  transform: scale(0);
+  transition: 0.3s;
+}
+
+.checkbox:checked + i:before {
+  transform: scale(1);
+}
+
+@media screen and (max-width: 1150px) {
+  .form {
+    display: block;
+  }
+
+  .inputs {
+    width: calc(100% - 30px);
+    margin: 0 15px;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .wrapper {
+    margin-left: 245px;
+    width: calc(100% - 245px);
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .wrapper {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .title {
+    margin: 100px 0 30px 15px;
+  }
+
+  .textarea {
+    height: 100px;
+  }
+
+  .field {
+    padding: 15px;
+  }
+}
