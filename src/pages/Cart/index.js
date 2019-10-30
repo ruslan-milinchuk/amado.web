@@ -4,42 +4,32 @@ import { connect } from "react-redux";
 import { changeQtyProduct } from "../../action/cart";
 import {
   CHANGE_QTY_PRODUCT_CART_DOWN,
-  CHANGE_QTY_PRODUCT_CART_UP,
-  DELIVERY
+  CHANGE_QTY_PRODUCT_CART_UP
 } from "../../constants";
+import CartTotal from "../../components/CartTotal";
+import { isEmpty } from "../../utils/isEmpty";
 
 class Cart extends Component {
   render() {
     const { cartList, changeQtyProduct } = this.props;
+    console.log("isEmpty(cartList)", isEmpty(cartList));
+    if (isEmpty(cartList)) {
+      return <h3 className={styles.noList}>No items in cart.</h3>;
+    }
     return (
       <div className={styles.wrapper}>
-        <div className={styles.selectedCart}>
-          <h2 className={styles.title}>Shopping Cart</h2>
-          <div className={styles.categoryList}>
-            <h4 className={styles.categoryItem} />
-            <h4 className={styles.categoryItem}>name</h4>
-            <h4 className={styles.categoryItem}>price</h4>
-            <h4 className={styles.categoryItem}>quantity</h4>
+        <h2 className={styles.title}>Shopping Cart</h2>
+        <div className={styles.container}>
+          <div className={styles.selectedCart}>
+            <div className={styles.categoryList}>
+              <h4 className={styles.categoryItem} />
+              <h4 className={styles.categoryItem}>name</h4>
+              <h4 className={styles.categoryItem}>price</h4>
+              <h4 className={styles.categoryItem}>quantity</h4>
+            </div>
+            <CartList changeQtyProduct={changeQtyProduct} cartList={cartList} />
           </div>
-          <CartList cartList={cartList} changeQtyProduct={changeQtyProduct} />
-        </div>
-        <div className={styles.info}>
-          <h5 className={styles.infoTitle}>cart total</h5>
-          <div>
-            <div className={styles.infoItem}>
-              <p>subtotal:</p>
-              <p>${cartTotal(cartList).subtotal.toFixed(2)}</p>
-            </div>
-            <div className={styles.infoItem}>
-              <p>delivery:</p>
-              <p>${DELIVERY}</p>
-            </div>
-            <div className={styles.infoItem}>
-              <p>total:</p>
-              <p>${cartTotal(cartList).total.toFixed(2)}</p>
-            </div>
-          </div>
-          <div className={styles.btn}>Checkout</div>
+          <CartTotal />
         </div>
       </div>
     );
@@ -84,18 +74,10 @@ const CartList = ({ cartList, changeQtyProduct }) =>
     </div>
   ));
 
-const cartTotal = cartList => {
-  let cartTotal = { subtotal: 0, total: 0 };
-  cartTotal.subtotal = Object.values(cartList).reduce(function(sum, current) {
-    return sum + current.price * current.qty;
-  }, 0);
-  cartTotal.total = cartTotal.subtotal + DELIVERY;
-  return cartTotal;
-};
-
-export default connect(
+const CartWithList = connect(
   ({ cart }) => ({ cartList: cart.cartList }),
   {
     changeQtyProduct
   }
 )(Cart);
+export default CartWithList;

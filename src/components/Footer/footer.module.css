@@ -112,7 +112,8 @@
     max-width: 100%;
   }
   .item {
-    padding: 15px;
+    font-size: 12px;
+    padding: 5px;
   }
 
   .navigate {
