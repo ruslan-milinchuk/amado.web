@@ -54,6 +54,7 @@
   font-weight: 700;
   cursor: pointer;
   margin-top: 100px;
+  outline: none;
 }
 
 .btn:hover {

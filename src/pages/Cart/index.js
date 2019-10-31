@@ -23,7 +23,7 @@ class Cart extends Component {
         <div className={styles.container}>
           <div className={styles.selectedCart}>
             <div className={styles.categoryList}>
-              <h4 className={styles.categoryItem} />
+              <h4 className={styles.categoryItem}>foto</h4>
               <h4 className={styles.categoryItem}>name</h4>
               <h4 className={styles.categoryItem}>price</h4>
               <h4 className={styles.categoryItem}>quantity</h4>

@@ -1,4 +1,5 @@
-import { IS_MAX_LENGTH, REQUIRED_FIELD } from "../constants";
+import { REQUIRED_FIELD } from "../constants";
+import { isMaxLength } from "./isMaxLength";
 
 export const requiredField = value => {
   if (value) {
@@ -9,7 +10,7 @@ export const requiredField = value => {
 
 export const maxLengthCreator = maxLength => value => {
   if (value && value.length > maxLength) {
-    return IS_MAX_LENGTH;
+    return isMaxLength(maxLength);
   }
   return null;
 };
