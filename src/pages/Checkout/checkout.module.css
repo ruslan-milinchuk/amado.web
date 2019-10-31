@@ -30,11 +30,12 @@
   color: #6b6b6b;
   text-transform: capitalize;
   font-weight: 700;
-  max-height: 50px;
+  max-height: 70px;
   padding: 30px;
   box-sizing: border-box;
   outline: none;
   border: none;
+  height: 70px;
 }
 
 .inputs {
@@ -53,6 +54,13 @@
 .phone {
   width: calc(50% - 10px);
   margin-left: 10px;
+}
+
+.select {
+  padding: 5px 35px 5px 30px;
+  font-size: 14px;
+  height: 70px;
+  -webkit-appearance: none;
 }
 
 .textarea {
@@ -106,6 +114,31 @@
 
 .checkbox:checked + i:before {
   transform: scale(1);
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.errorFalse {
+  position: absolute;
+  display: none;
+}
+
+.errorTrue {
+  position: absolute;
+  height: auto;
+  max-width: 165px;
+  background: darkred;
+  color: wheat;
+  padding: 4px 8px;
+  border-radius: 3px;
+  text-align: center;
+  font-size: 12px;
+  left: -1px;
+  top: -11px;
+  text-shadow: 0 0 black;
+  box-sizing: border-box;
 }
 
 @media screen and (max-width: 1150px) {
