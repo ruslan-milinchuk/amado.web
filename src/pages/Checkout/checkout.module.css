@@ -20,7 +20,7 @@
 .fieldWrapper {
   width: 100%;
   display: inline-block;
-  margin-bottom: 15px;
+  margin-bottom: 30px;
   position: relative;
 }
 
@@ -47,14 +47,14 @@
 
 .name,
 .code {
-  width: calc(50% - 10px);
-  margin-right: 10px;
+  width: calc(50% - 15px);
+  margin-right: 15px;
 }
 
 .surname,
 .phone {
-  width: calc(50% - 10px);
-  margin-left: 10px;
+  width: calc(50% - 15px);
+  margin-left: 15px;
 }
 
 .select {
@@ -68,9 +68,17 @@
   max-height: 200px;
   height: 200px;
 }
+.comment {
+  margin-bottom: 10px;
+}
 
 .inputWrapper {
   position: relative;
+}
+
+.inputWrapperError {
+  border: 1px #ff0e0e solid;
+  margin: -1px;
 }
 
 .errorFalse {
@@ -81,11 +89,11 @@
 .errorTrue {
   position: absolute;
   height: auto;
-  max-width: 165px;
+  max-width: 190px;
   color: #ff0e0e;
   font-size: 12px;
   left: 5px;
-  bottom: -15px;
+  bottom: -22px;
   text-shadow: 0 0 black;
   box-sizing: border-box;
 }

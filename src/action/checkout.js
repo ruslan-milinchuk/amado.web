@@ -1,6 +1,4 @@
-import {
-  SET_COUNTRY_LIST
-} from "../constants";
+import { SET_COUNTRY_LIST } from "../constants";
 import apiFetch from "../utils/apiFetch";
 
 export const setCountryList = () => {

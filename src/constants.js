@@ -1,3 +1,7 @@
+import MaskedInput from "react-text-mask";
+import React from "react";
+
+
 export const CHANGE_MENU_STATUS = "CHANGE_MENU_STATUS";
 export const SLICE_RANDOM_TOP_PRODUCT_LIST = "SLICE_RANDOM_TOP_PRODUCT_LIST";
 export const END_DATA_PRODUCT_DETAILS = "END_DATA_PRODUCT_DETAILS";
@@ -31,5 +35,6 @@ export const INPUT = "input";
 export const SELECT = "select";
 export const MASKED_INPUT = "masked-input";
 export const MAX_LENGTH_SYMBOL = 30;
-export const IS_MAX_LENGTH = `Max length is ${MAX_LENGTH_SYMBOL} symbols`;
+export const MAX_LENGTH_SYMBOL_TEXTAREA = 1000;
 export const REQUIRED_FIELD= "Field is required";
+export const MASK =  ["(", /[1-9]/, /\d/, /\d/, ")", " ", /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]

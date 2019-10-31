@@ -13,9 +13,10 @@ import {
   DELIVERY,
   EMAIL,
   INPUT,
-  IS_MAX_LENGTH,
+  MASK,
   MASKED_INPUT,
   MAX_LENGTH_SYMBOL,
+  MAX_LENGTH_SYMBOL_TEXTAREA,
   REQUIRED_FIELD,
   SELECT,
   TEXTAREA
@@ -23,6 +24,7 @@ import {
 import { connect } from "react-redux";
 
 import { cartTotal } from "../../utils/cartTotal";
+import { isMaxLength } from "../../utils/isMaxLength";
 
 const Checkout = () => (
   <div className={styles.wrapper}>
@@ -31,9 +33,12 @@ const Checkout = () => (
   </div>
 );
 
-const onSubmit = formData => {};
+const onSubmit = formData => {
+  console.log("formData", formData);
+};
 
 const maxLength = maxLengthCreator(MAX_LENGTH_SYMBOL);
+const maxLengthTextarea = maxLengthCreator(MAX_LENGTH_SYMBOL_TEXTAREA);
 
 const Form = props => {
   const { handleSubmit, cartList, history } = props;
@@ -59,9 +64,11 @@ const Form = props => {
                 }
                 placeholder={placeholder}
                 validate={
-                  name === COMMENT || name === EMAIL || name === COMPANY
-                    ? [maxLength]
-                    : [maxLength, requiredField]
+                  ((name === EMAIL || name === COMPANY) && [maxLength]) ||
+                  (name === COMMENT && [maxLengthTextarea]) || [
+                    maxLength,
+                    requiredField
+                  ]
                 }
               />
             </div>
@@ -79,13 +86,22 @@ const Form = props => {
   );
 };
 
+const checkMaxLength = isMaxLength(MAX_LENGTH_SYMBOL);
+
 const Input = ({ input, meta, ...props }) => (
-  <div className={styles.inputWrapper}>
+  <div
+    className={
+      meta.error === checkMaxLength ||
+      (meta.error === REQUIRED_FIELD && meta.touched)
+        ? `${styles.inputWrapperError}`
+        : `${styles.inputWrapper}`
+    }
+  >
     <input {...input} {...props} />
     <span
       className={
-        (meta.error === REQUIRED_FIELD && meta.touched) ||
-        meta.error === IS_MAX_LENGTH
+        meta.error === checkMaxLength ||
+        (meta.error === REQUIRED_FIELD && meta.touched)
           ? `${styles.errorTrue}`
           : `${styles.errorFalse}`
       }
@@ -98,7 +114,11 @@ const Input = ({ input, meta, ...props }) => (
 const TextArea = ({ input, meta, ...props }) => {
   const hasError = meta.error;
   return (
-    <div className={styles.inputWrapper}>
+    <div
+      className={
+        hasError ? `${styles.inputWrapperError}` : `${styles.inputWrapper}`
+      }
+    >
       <textarea {...input} {...props} />
       <span
         className={hasError ? `${styles.errorTrue}` : `${styles.errorFalse}`}
@@ -118,57 +138,47 @@ class CountrySelect extends Component {
   render() {
     const { countriesList, input, meta, ...props } = this.props;
     return (
-      <select {...props} {...input}>
-        {countriesList.map(({ name, id, code }) => (
-          <option key={id} name={name} value={code}>
-            {name}
-          </option>
-        ))}
-      </select>
+      <div
+        className={
+          meta.error === checkMaxLength ||
+          (meta.error === REQUIRED_FIELD && meta.touched)
+            ? `${styles.inputWrapperError}`
+            : `${styles.inputWrapper}`
+        }
+      >
+        <select {...props} {...input}>
+          {countriesList.map(({ name, id, code }) => (
+            <option key={id} name={name} value={code}>
+              {name}
+            </option>
+          ))}
+        </select>
+      </div>
     );
   }
 }
 
-const PhoneInput = ({ input, meta, ...props }) => {
-  return (
-    <div>
-      <MaskedInput
-        {...input}
-        {...props}
-        mask={[
-          "(",
-          /[1-9]/,
-          /\d/,
-          /\d/,
-          ")",
-          " ",
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/
-        ]}
-        quide={true}
-      />
-      <span
-        className={
-          meta.error === REQUIRED_FIELD && meta.touched
-            ? `${styles.errorTrue}`
-            : `${styles.errorFalse}`
-        }
-      >
-        {meta.error}
-      </span>
-    </div>
-  );
-};
+const PhoneInput = ({ input, meta, ...props }) => (
+  <div
+    className={
+      meta.error === checkMaxLength ||
+      (meta.error === REQUIRED_FIELD && meta.touched)
+        ? `${styles.inputWrapperError}`
+        : `${styles.inputWrapper}`
+    }
+  >
+    <MaskedInput {...input} {...props} mask={MASK} quide={true} />
+    <span
+      className={
+        meta.error === REQUIRED_FIELD && meta.touched
+          ? `${styles.errorTrue}`
+          : `${styles.errorFalse}`
+      }
+    >
+      {meta.error}
+    </span>
+  </div>
+);
 
 const inputsData = [
   {
