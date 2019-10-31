@@ -4,15 +4,16 @@ import { connect } from "react-redux";
 import { changeQtyProduct } from "../../action/cart";
 import {
   CHANGE_QTY_PRODUCT_CART_DOWN,
-  CHANGE_QTY_PRODUCT_CART_UP
+  CHANGE_QTY_PRODUCT_CART_UP,
+  DELIVERY
 } from "../../constants";
 import CartTotal from "../../components/CartTotal";
 import { isEmpty } from "../../utils/isEmpty";
+import { cartTotal } from "../../utils/cartTotal";
 
 class Cart extends Component {
   render() {
-    const { cartList, changeQtyProduct } = this.props;
-    console.log("isEmpty(cartList)", isEmpty(cartList));
+    const { cartList, changeQtyProduct, history } = this.props;
     if (isEmpty(cartList)) {
       return <h3 className={styles.noList}>No items in cart.</h3>;
     }
@@ -29,7 +30,13 @@ class Cart extends Component {
             </div>
             <CartList changeQtyProduct={changeQtyProduct} cartList={cartList} />
           </div>
-          <CartTotal />
+          <CartTotal
+            subtotal={cartTotal(cartList).subtotal.toFixed(2)}
+            total={cartTotal(cartList).total.toFixed(2)}
+            delivery={DELIVERY}
+            checkout={false}
+            history={history}
+          />
         </div>
       </div>
     );
