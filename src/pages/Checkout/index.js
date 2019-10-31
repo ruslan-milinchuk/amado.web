@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import MaskedInput from "react-text-mask";
 
 import styles from "./checkout.module.css";
 import { Field, reduxForm } from "redux-form";
@@ -13,6 +14,7 @@ import {
   EMAIL,
   INPUT,
   IS_MAX_LENGTH,
+  MASKED_INPUT,
   MAX_LENGTH_SYMBOL,
   REQUIRED_FIELD,
   SELECT,
@@ -22,14 +24,12 @@ import { connect } from "react-redux";
 
 import { cartTotal } from "../../utils/cartTotal";
 
-const Checkout = () => {
-  return (
-    <div className={styles.wrapper}>
-      <h2 className={styles.title}>Checkout</h2>
-      <ReduxFormWithList onSubmit={onSubmit} />
-    </div>
-  );
-};
+const Checkout = () => (
+  <div className={styles.wrapper}>
+    <h2 className={styles.title}>Checkout</h2>
+    <ReduxFormWithList onSubmit={onSubmit} />
+  </div>
+);
 
 const onSubmit = formData => {};
 
@@ -53,7 +53,8 @@ const Form = props => {
                 component={
                   (component === INPUT && Input) ||
                   (component === TEXTAREA && TextArea) ||
-                  (component === SELECT && SelectedSetList) ||
+                  (component === SELECT && CountrySelectSetList) ||
+                  (component === MASKED_INPUT && PhoneInput) ||
                   component
                 }
                 placeholder={placeholder}
@@ -66,28 +67,6 @@ const Form = props => {
             </div>
           )
         )}
-        <label className={styles.label} htmlFor="create-account">
-          <Field
-            className={styles.checkbox}
-            id="create-account"
-            type="checkbox"
-            name="create-account"
-            component="input"
-          />
-          <i />
-          Create an accout
-        </label>
-        <label className={styles.label} htmlFor="ship-address">
-          <Field
-            className={styles.checkbox}
-            id="ship-address"
-            type="checkbox"
-            name="ship-address"
-            component="input"
-          />
-          <i />
-          Ship to a different address
-        </label>
       </div>
       <CartTotal
         subtotal={cartTotal(cartList).subtotal.toFixed(2)}
@@ -100,23 +79,21 @@ const Form = props => {
   );
 };
 
-const Input = ({ input, meta, ...props }) => {
-  return (
-    <div className={styles.inputWrapper}>
-      <input {...input} {...props} />
-      <span
-        className={
-          (meta.error === REQUIRED_FIELD && meta.touched) ||
-          meta.error === IS_MAX_LENGTH
-            ? `${styles.errorTrue}`
-            : `${styles.errorFalse}`
-        }
-      >
-        {meta.error}
-      </span>
-    </div>
-  );
-};
+const Input = ({ input, meta, ...props }) => (
+  <div className={styles.inputWrapper}>
+    <input {...input} {...props} />
+    <span
+      className={
+        (meta.error === REQUIRED_FIELD && meta.touched) ||
+        meta.error === IS_MAX_LENGTH
+          ? `${styles.errorTrue}`
+          : `${styles.errorFalse}`
+      }
+    >
+      {meta.error}
+    </span>
+  </div>
+);
 
 const TextArea = ({ input, meta, ...props }) => {
   const hasError = meta.error;
@@ -132,7 +109,7 @@ const TextArea = ({ input, meta, ...props }) => {
   );
 };
 
-class Select extends Component {
+class CountrySelect extends Component {
   componentDidMount() {
     const { setCountryList } = this.props;
     setCountryList();
@@ -142,8 +119,8 @@ class Select extends Component {
     const { countriesList, input, meta, ...props } = this.props;
     return (
       <select {...props} {...input}>
-        {countriesList.map(({ name, id }) => (
-          <option key={id} name={name} value={name}>
+        {countriesList.map(({ name, id, code }) => (
+          <option key={id} name={name} value={code}>
             {name}
           </option>
         ))}
@@ -151,6 +128,47 @@ class Select extends Component {
     );
   }
 }
+
+const PhoneInput = ({ input, meta, ...props }) => {
+  return (
+    <div>
+      <MaskedInput
+        {...input}
+        {...props}
+        mask={[
+          "(",
+          /[1-9]/,
+          /\d/,
+          /\d/,
+          ")",
+          " ",
+          /\d/,
+          /\d/,
+          "-",
+          /\d/,
+          /\d/,
+          /\d/,
+          "-",
+          /\d/,
+          /\d/,
+          "-",
+          /\d/,
+          /\d/
+        ]}
+        quide={true}
+      />
+      <span
+        className={
+          meta.error === REQUIRED_FIELD && meta.touched
+            ? `${styles.errorTrue}`
+            : `${styles.errorFalse}`
+        }
+      >
+        {meta.error}
+      </span>
+    </div>
+  );
+};
 
 const inputsData = [
   {
@@ -212,8 +230,8 @@ const inputsData = [
   {
     name: "phone",
     placeholder: "Phone No",
-    component: "input",
-    type: "number",
+    component: "masked-input",
+    type: "masked-input",
     className: styles.phone
   },
   {
@@ -225,10 +243,10 @@ const inputsData = [
   }
 ];
 
-const SelectedSetList = connect(
+const CountrySelectSetList = connect(
   ({ checkout }) => ({ countriesList: checkout.countriesList }),
   { setCountryList }
-)(Select);
+)(CountrySelect);
 
 const ReduxForm = reduxForm({ form: "checkout" })(Form);
 

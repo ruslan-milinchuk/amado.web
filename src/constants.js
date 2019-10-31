@@ -29,6 +29,7 @@ export const COMMENT = "comment";
 export const TEXTAREA = "textarea";
 export const INPUT = "input";
 export const SELECT = "select";
+export const MASKED_INPUT = "masked-input";
 export const MAX_LENGTH_SYMBOL = 30;
 export const IS_MAX_LENGTH = `Max length is ${MAX_LENGTH_SYMBOL} symbols`;
 export const REQUIRED_FIELD= "Field is required";
