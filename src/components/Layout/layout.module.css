@@ -20,7 +20,7 @@
   -webkit-transition-duration: 500ms;
   transition-duration: 500ms;
   position: fixed;
-  z-index: 2147483647;
+  z-index: 50;
 }
 .scrollTop > svg {
   color: #ffffff;

@@ -25,28 +25,30 @@ import { connect } from "react-redux";
 
 import { cartTotal } from "../../utils/cartTotal";
 import { isMaxLength } from "../../utils/isMaxLength";
-import { setCartTotal } from "../../action/cart";
+import { setCartTotal, clearCartList } from "../../action/cart";
 import apiFetch from "../../utils/apiFetch";
+import { deleteCartStorage } from "../../utils/deleteCartStorage";
+import { withRouter } from "react-router";
 
-const Checkout = ({ cart }) => (
+const Checkout = ({ cart, clearCartList, history }) => (
   <div className={styles.wrapper}>
     <h2 className={styles.title}>Checkout</h2>
     <ReduxFormWithList
-      onSubmit={async values => await onSubmit(values, cart)}
+      onSubmit={async values => await onSubmit(values, cart, clearCartList)}
+      history={history}
     />
   </div>
 );
 
-const onSubmit = async (formData, cart) => {
+const onSubmit = async (formData, cart, clearCartList) => {
   const { cartList, cartTotal } = cart;
-  const product = [];
-  Object.values(cartList).map(({ qty, price, id }) => {
-    product.push({
+  const product = Object.values(cartList).map(({ qty, price, id }) => {
+    return {
       quantity: qty,
       productId: id,
       pricePerOne: price,
       totalPrice: price * qty
-    });
+    };
   });
   const bill = {
     ...formData,
@@ -55,7 +57,7 @@ const onSubmit = async (formData, cart) => {
     product: product
   };
 
-  const res = await apiFetch("/bills", {
+  await apiFetch("/bills", {
     method: "POST",
     body: JSON.stringify(bill),
     headers: {
@@ -64,9 +66,8 @@ const onSubmit = async (formData, cart) => {
     }
   });
 
-  const data = res.json();
-
-  console.log("DATA", data);
+  await deleteCartStorage();
+  clearCartList();
 };
 
 const maxLength = maxLengthCreator(MAX_LENGTH_SYMBOL);
@@ -83,7 +84,7 @@ class Form extends Component {
   }
 
   render() {
-    const { handleSubmit, cartList, history } = this.props;
+    const { handleSubmit, cartList, history, postOrderStatus } = this.props;
     return (
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.inputs}>
@@ -124,6 +125,20 @@ class Form extends Component {
           checkout={true}
           history={history}
         />
+        <div
+          className={
+            postOrderStatus
+              ? `${styles.orderShippedWrapp}`
+              : `${styles.orderOpenWrapp}`
+          }
+        >
+          <div className={styles.orderShipped}>
+            <p>Thank you for your order. Our manager will contact you</p>
+            <div onClick={() => history.push("/")} className={styles.btn}>
+              ok
+            </div>
+          </div>
+        </div>
       </form>
     );
   }
@@ -314,7 +329,9 @@ const CheckoutWithCart = connect(
   ({ cart }) => ({
     cart
   }),
-  { setCartTotal }
+  { clearCartList }
 )(Checkout);
 
-export default CheckoutWithCart;
+const CheckoutWithCartAndLocation = withRouter(CheckoutWithCart);
+
+export default CheckoutWithCartAndLocation;

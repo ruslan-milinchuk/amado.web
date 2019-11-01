@@ -4,14 +4,16 @@ import {
   CHANGE_QTY_PRODUCT,
   CHANGE_QTY_PRODUCT_CART,
   CHECK_LOCAL_STORAGE,
-  SET_CART_TOTAL
+  SET_CART_TOTAL,
+  CLEAR_CART_LIST,
+  START_NEW_ORDER
 } from "../constants";
 
 const BASIC_STATE = {
   qtyProduct: 1,
   cartList: [],
   cartTotal: {},
-  postOrder: {}
+  postOrderStatus: false
 };
 
 export const cart = (state = BASIC_STATE, { type, payload }) => {
@@ -50,6 +52,20 @@ export const cart = (state = BASIC_STATE, { type, payload }) => {
         cartTotal: payload
       };
 
+    case CLEAR_CART_LIST:
+      return {
+        ...state,
+        qtyProduct: 1,
+        cartList: [],
+        cartTotal: {},
+        postOrderStatus: true
+      };
+
+    case START_NEW_ORDER:
+      return {
+        ...state,
+        postOrderStatus: false
+      };
     default:
       return state;
   }

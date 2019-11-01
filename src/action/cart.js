@@ -8,9 +8,10 @@ import {
   CHANGE_QTY_PRODUCT_DOWN,
   CHANGE_QTY_PRODUCT_UP,
   CHECK_LOCAL_STORAGE,
-  DELIVERY,
   SET_CART_TOTAL,
-  SET_QTY_ENTER_VALUE
+  SET_QTY_ENTER_VALUE,
+  CLEAR_CART_LIST,
+  START_NEW_ORDER
 } from "../constants";
 
 import { setCartToStorage } from "../utils/setCartToStorage";
@@ -125,5 +126,17 @@ export const setCartTotal = cartTotal => {
       type: SET_CART_TOTAL,
       payload: cartTotal
     });
+  };
+};
+
+export const clearCartList = () => {
+  return  dispatch => {
+    dispatch({ type: CLEAR_CART_LIST });
+  };
+};
+
+export const startNewOrder = () => {
+  return  dispatch => {
+    dispatch({ type: START_NEW_ORDER });
   };
 };
