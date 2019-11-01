@@ -25,66 +25,109 @@ import { connect } from "react-redux";
 
 import { cartTotal } from "../../utils/cartTotal";
 import { isMaxLength } from "../../utils/isMaxLength";
+import { setCartTotal } from "../../action/cart";
+import apiFetch from "../../utils/apiFetch";
 
-const Checkout = () => (
+const Checkout = ({ cart }) => (
   <div className={styles.wrapper}>
     <h2 className={styles.title}>Checkout</h2>
-    <ReduxFormWithList onSubmit={onSubmit} />
+    <ReduxFormWithList
+      onSubmit={async values => await onSubmit(values, cart)}
+    />
   </div>
 );
 
-const onSubmit = formData => {
-  console.log("formData", formData);
+const onSubmit = async (formData, cart) => {
+  const { cartList, cartTotal } = cart;
+  const product = [];
+  Object.values(cartList).map(({ qty, price, id }) => {
+    product.push({
+      quantity: qty,
+      productId: id,
+      pricePerOne: price,
+      totalPrice: price * qty
+    });
+  });
+  const bill = {
+    ...formData,
+    ...cartTotal,
+    delivery: DELIVERY,
+    product: product
+  };
+
+  const res = await apiFetch("/bills", {
+    method: "POST",
+    body: JSON.stringify(bill),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  });
+
+  const data = res.json();
+
+  console.log("DATA", data);
 };
 
 const maxLength = maxLengthCreator(MAX_LENGTH_SYMBOL);
 const maxLengthTextarea = maxLengthCreator(MAX_LENGTH_SYMBOL_TEXTAREA);
 
-const Form = props => {
-  const { handleSubmit, cartList, history } = props;
-  return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <div className={styles.inputs}>
-        {inputsData.map(
-          ({ name, type, component, placeholder, className }, index) => (
-            <div
-              key={index}
-              className={`${styles.fieldWrapper} ${styles[name]}`}
-            >
-              <Field
-                className={`${styles.field} ${styles[component]}`}
-                name={name}
-                type={type}
-                component={
-                  (component === INPUT && Input) ||
-                  (component === TEXTAREA && TextArea) ||
-                  (component === SELECT && CountrySelectSetList) ||
-                  (component === MASKED_INPUT && PhoneInput) ||
-                  component
-                }
-                placeholder={placeholder}
-                validate={
-                  ((name === EMAIL || name === COMPANY) && [maxLength]) ||
-                  (name === COMMENT && [maxLengthTextarea]) || [
-                    maxLength,
-                    requiredField
-                  ]
-                }
-              />
-            </div>
-          )
-        )}
-      </div>
-      <CartTotal
-        subtotal={cartTotal(cartList).subtotal.toFixed(2)}
-        total={cartTotal(cartList).total.toFixed(2)}
-        delivery={DELIVERY}
-        checkout={true}
-        history={history}
-      />
-    </form>
-  );
-};
+class Form extends Component {
+  componentDidMount() {
+    const { cartList, setCartTotal } = this.props;
+    const cartTotalNew = {
+      subTotal: cartTotal(cartList).subtotal.toFixed(2),
+      total: cartTotal(cartList).total.toFixed(2)
+    };
+    setCartTotal(cartTotalNew);
+  }
+
+  render() {
+    const { handleSubmit, cartList, history } = this.props;
+    return (
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.inputs}>
+          {inputsData.map(
+            ({ name, type, component, placeholder, className }, index) => (
+              <div
+                key={index}
+                className={`${styles.fieldWrapper} ${styles[name]}`}
+              >
+                <Field
+                  className={`${styles.field} ${styles[component]}`}
+                  name={name}
+                  type={type}
+                  component={
+                    (component === INPUT && Input) ||
+                    (component === TEXTAREA && TextArea) ||
+                    (component === SELECT && CountrySelectSetList) ||
+                    (component === MASKED_INPUT && PhoneInput) ||
+                    component
+                  }
+                  placeholder={placeholder}
+                  validate={
+                    ((name === EMAIL || name === COMPANY) && [maxLength]) ||
+                    (name === COMMENT && [maxLengthTextarea]) || [
+                      maxLength,
+                      requiredField
+                    ]
+                  }
+                />
+              </div>
+            )
+          )}
+        </div>
+        <CartTotal
+          subtotal={cartTotal(cartList).subtotal.toFixed(2)}
+          total={cartTotal(cartList).total.toFixed(2)}
+          delivery={DELIVERY}
+          checkout={true}
+          history={history}
+        />
+      </form>
+    );
+  }
+}
 
 const checkMaxLength = isMaxLength(MAX_LENGTH_SYMBOL);
 
@@ -134,7 +177,6 @@ class CountrySelect extends Component {
     const { setCountryList } = this.props;
     setCountryList();
   }
-
   render() {
     const { countriesList, input, meta, ...props } = this.props;
     return (
@@ -182,14 +224,14 @@ const PhoneInput = ({ input, meta, ...props }) => (
 
 const inputsData = [
   {
-    name: "name",
+    name: "firstName",
     placeholder: "First Name",
     component: "input",
     type: "text",
     className: `${styles.field} ${styles.name}`
   },
   {
-    name: "surname",
+    name: "lastName",
     placeholder: "Last Name",
     component: "input",
     type: "text",
@@ -224,14 +266,14 @@ const inputsData = [
     className: styles.field
   },
   {
-    name: "town",
+    name: "city",
     placeholder: "Town",
     component: "input",
     type: "text",
     className: styles.field
   },
   {
-    name: "code",
+    name: "zip",
     placeholder: "Zip Code",
     component: "input",
     type: "text",
@@ -262,9 +304,17 @@ const ReduxForm = reduxForm({ form: "checkout" })(Form);
 
 const ReduxFormWithList = connect(
   ({ cart }) => ({
-    cartList: cart.cartList
+    cartList: cart.cartList,
+    postOrderStatus: cart.postOrderStatus
   }),
-  {}
+  { setCartTotal }
 )(ReduxForm);
 
-export default Checkout;
+const CheckoutWithCart = connect(
+  ({ cart }) => ({
+    cart
+  }),
+  { setCartTotal }
+)(Checkout);
+
+export default CheckoutWithCart;

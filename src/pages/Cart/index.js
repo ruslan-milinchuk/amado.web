@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./cart.module.css";
 import { connect } from "react-redux";
-import { changeQtyProduct } from "../../action/cart";
+import { changeQtyProduct, setCartTotal } from "../../action/cart";
 import {
   CHANGE_QTY_PRODUCT_CART_DOWN,
   CHANGE_QTY_PRODUCT_CART_UP,
@@ -36,6 +36,7 @@ class Cart extends Component {
             delivery={DELIVERY}
             checkout={false}
             history={history}
+            setCartTotal={setCartTotal}
           />
         </div>
       </div>
@@ -84,7 +85,8 @@ const CartList = ({ cartList, changeQtyProduct }) =>
 const CartWithList = connect(
   ({ cart }) => ({ cartList: cart.cartList }),
   {
-    changeQtyProduct
+    changeQtyProduct,
+    setCartTotal
   }
 )(Cart);
 export default CartWithList;
