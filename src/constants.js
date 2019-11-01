@@ -1,7 +1,3 @@
-import MaskedInput from "react-text-mask";
-import React from "react";
-
-
 export const CHANGE_MENU_STATUS = "CHANGE_MENU_STATUS";
 export const SLICE_RANDOM_TOP_PRODUCT_LIST = "SLICE_RANDOM_TOP_PRODUCT_LIST";
 export const END_DATA_PRODUCT_DETAILS = "END_DATA_PRODUCT_DETAILS";
@@ -18,6 +14,8 @@ export const ERROR_DATA_PRODUCT_DETAILS = "ERROR_DATA_PRODUCT_DETAILS";
 export const ERROR_DATA_PRODUCTS = "ERROR_DATA_PRODUCTS";
 export const CHECK_LOCAL_STORAGE = "CHECK_LOCAL_STORAGE";
 export const SET_COUNTRY_LIST = "SET_COUNTRY_LIST";
+export const SET_CART_TOTAL = "SET_CART_TOTAL";
+export const POST_ORDER_DATA = "POST_ORDER_DATA";
 
 export const TOP_PRODUCT_LIST_LENGTH = 9;
 export const CHANGE_QTY_PRODUCT_UP = "up";
@@ -36,5 +34,24 @@ export const SELECT = "select";
 export const MASKED_INPUT = "masked-input";
 export const MAX_LENGTH_SYMBOL = 30;
 export const MAX_LENGTH_SYMBOL_TEXTAREA = 1000;
-export const REQUIRED_FIELD= "Field is required";
-export const MASK =  ["(", /[1-9]/, /\d/, /\d/, ")", " ", /\d/, /\d/, "-", /\d/, /\d/, /\d/, "-", /\d/, /\d/, "-", /\d/, /\d/]
+export const REQUIRED_FIELD = "Field is required";
+export const MASK = [
+  "(",
+  /[1-9]/,
+  /\d/,
+  /\d/,
+  ")",
+  " ",
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/
+];

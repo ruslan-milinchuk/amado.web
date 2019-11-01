@@ -1,14 +1,16 @@
 import {
   ADD_TO_CART,
+  CART_STORAGE,
   CHANGE_QTY_PRODUCT,
   CHANGE_QTY_PRODUCT_CART,
-  CHANGE_QTY_PRODUCT_DOWN,
   CHANGE_QTY_PRODUCT_CART_DOWN,
-  CHANGE_QTY_PRODUCT_UP,
   CHANGE_QTY_PRODUCT_CART_UP,
-  SET_QTY_ENTER_VALUE,
+  CHANGE_QTY_PRODUCT_DOWN,
+  CHANGE_QTY_PRODUCT_UP,
   CHECK_LOCAL_STORAGE,
-  CART_STORAGE
+  DELIVERY,
+  SET_CART_TOTAL,
+  SET_QTY_ENTER_VALUE
 } from "../constants";
 
 import { setCartToStorage } from "../utils/setCartToStorage";
@@ -114,5 +116,14 @@ export const enterQtyProductInDetails = enteredValue => {
     if (!enteredValue) {
       dispatch({ type: SET_QTY_ENTER_VALUE, payload: "" });
     }
+  };
+};
+
+export const setCartTotal = cartTotal => {
+  return dispatch => {
+    return dispatch({
+      type: SET_CART_TOTAL,
+      payload: cartTotal
+    });
   };
 };
