@@ -1,0 +1,294 @@
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  margin-left: 320px;
+}
+
+.filter {
+  z-index: 1;
+  width: 230px;
+  max-width: 230px;
+  background-color: #f5f7fa;
+  padding: 100px 40px;
+  box-sizing: border-box;
+}
+
+.type {
+}
+
+.listType {
+  margin-bottom: 30px;
+}
+
+.typeTitle {
+  line-height: 1.3;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 30px;
+  color: #282c34;
+}
+
+.typeItem {
+  text-transform: capitalize;
+  font-size: 16px;
+  padding: 15px 0 15px 20px;
+  display: block;
+  font-weight: 700;
+  color: #6b6b6b;
+  cursor: pointer;
+}
+
+.typeItemActive {
+  color: #fbb710;
+}
+
+.typeItem:hover {
+  color: #fbb710;
+}
+
+.popular {
+  margin-bottom: 30px;
+}
+
+.popular .typeTitle {
+}
+
+.popularItem {
+  transition-duration: 500ms;
+  font-size: 16px;
+  color: #959595;
+  font-weight: 700;
+  cursor: pointer;
+  position: relative;
+  padding: 15px 0 15px 20px;
+}
+
+.popularItem:after {
+  position: absolute;
+  content: "";
+  left: 0;
+  top: 18px;
+  box-sizing: border-box;
+  padding: 0;
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background: #dee2e6;
+  cursor: pointer;
+}
+
+.popularActive:after {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ccc;
+  background: #007bff;
+}
+
+.color {
+}
+
+.products {
+  position: relative;
+  z-index: 1;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: calc(100% - 320px);
+  width: calc(100% - 320px);
+  max-width: calc(100% - 320px);
+}
+
+.sort {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 150px 0 40px;
+}
+
+.view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 150px;
+  height: 40px;
+  background: #f5f7fa;
+  position: relative;
+}
+
+.viewTitle {
+  display: inline-block;
+  max-width: 35px;
+  font-size: 14px;
+  background-color: #f5f7fa;
+  color: #959595;
+  padding-left: 15px;
+  font-weight: 700;
+}
+
+.viewQty {
+  display: inline-block;
+}
+
+.dropDownList {
+  z-index: 10;
+  position: absolute;
+  left: 41px;
+  top: 45px;
+}
+
+.dropDownList > p {
+  cursor: pointer;
+  font-weight: 700;
+  min-height: 40px;
+  outline: none;
+  padding-left: 18px;
+  padding-right: 29px;
+  transition: all 0.2s;
+  background: #f5f7fa;
+}
+
+.dropDownList > p:first-child {
+  padding-top: 20px;
+}
+
+.dropDownListClose {
+  display: none;
+}
+
+.viewActive {
+  color: #fbb710;
+}
+
+.viewControl {
+  transform: rotate(-180deg);
+}
+
+.viewControl > svg {
+  width: 6px;
+  padding: 14px 10px;
+  color: #6b6b6b;
+}
+
+.viewControlOpen {
+  transform: rotate(0deg);
+}
+
+.cartList {
+  width: calc(100% - 30px);
+}
+
+.item {
+  width: calc(50% - 30px);
+  display: inline-block;
+  margin: 0 15px;
+}
+
+.img {
+  width: auto;
+  min-width: auto;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.imgData {
+  position: relative;
+  margin-top: 25px;
+  padding-top: 15px;
+}
+
+.basket {
+  width: 20px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 5px;
+  color: #8c858559;
+  cursor: pointer;
+}
+
+.basketActive{
+  color: #fbb710;
+}
+
+.imgData:before {
+  position: absolute;
+  content: "";
+  width: 70px;
+  border-bottom: 2px #fbb710 solid;
+  top: 0;
+  left: 0;
+}
+
+.content {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.inner {
+  position: relative;
+  height: 0;
+  border: none;
+  overflow: hidden;
+}
+
+.correlationHeight {
+  padding-top: 100%;
+}
+
+.title {
+  color: #242424;
+  line-height: 1.3;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.price {
+  line-height: 1;
+  color: #fbb710;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.control {
+  display: flex;
+  justify-content: flex-end;
+  margin: 60px 0 20px;
+}
+
+.controlLeft,
+.controlRight {
+  width: 50px;
+  height: 50px;
+  background-color: #f5f7fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6d6d6d;
+  cursor: pointer;
+}
+
+.controlLeft:hover,
+.controlRight:hover {
+  background-color: #fbb710;
+  color: white;
+}
+
+.controlLeft > svg,
+.controlRight > svg {
+  width: 20px;
+}
+
+.controlRight {
+  transform: rotate(90deg);
+  margin-left: 35px;
+}
+
+.controlLeft {
+  transform: rotate(-90deg);
+}
