@@ -30,6 +30,7 @@ export const cart = (state = BASIC_STATE, { type, payload }) => {
 
     case CHANGE_QTY_PRODUCT_CART:
       const { qty, itemCart } = payload;
+      console.log("catt.cartList", state.cartList);
       return {
         ...state,
         cartList: {

@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import ShopWithFilter from "./pages/Shop";
 
 const history = createBrowserHistory();
 
@@ -21,6 +22,7 @@ const App = () => (
       <Route path="/product/:id" component={Product} />
       <Route path="/cart" component={Cart} />
       <Route path="/checkout" component={Checkout} />
+      <Route path="/shop" component={ShopWithFilter} />
     </Layout>
     <Footer />
   </Router>
