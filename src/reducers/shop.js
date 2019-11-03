@@ -1,87 +1,61 @@
 import {
-  GET_DATA_FILTER,
   MIN_VIEW_SHOP,
-  GET_ACTIVE_LIST,
-  GET_START_ACTIVE_LIST,
-  CHANGE_STATE_IS_POPULAR,
-  CHANGE_VIEW_STATUS,
-  CLICK_CONTROL,
-  GET_ACTIVE_LIST_FROM_ALL_LIST
+  GET_START_PAGE,
+  SET_NEW_SEARCH_PARAMS,
+  SET_NEW_LIST_PRODUCT,
+  CHECK_CONTROL_STATE,
+  SET_TYPE_ALL
 } from "../constants";
 
 const BASIC = {
-  view: MIN_VIEW_SHOP,
-  viewOpen: false,
-  startList: 0,
-  activeType: "",
-  isPopular: false,
-  listProduct: [],
-  listProductStart: [],
+  params: {
+    type: undefined,
+    _sort: "createdAt",
+    _start: 0,
+    _limit: MIN_VIEW_SHOP,
+    _q: undefined,
+    isTop: undefined
+  },
+  list: {},
   allList: {},
-  types: [],
-  popular: []
+  controlLeftActive: false,
+  controlRightActive: true
 };
 
 export const shop = (state = BASIC, { type, payload }) => {
+  const { allList } = state;
   switch (type) {
-    case GET_DATA_FILTER:
-      const { types, popular } = payload;
+    case GET_START_PAGE:
       return {
         ...state,
-        types,
-        popular
+        list: payload,
+        allList: { ...allList, ...payload }
       };
 
-    case GET_ACTIVE_LIST:
-      const { activeList, activeType, item, listToAll } = payload;
-      const { allList } = state;
+    case SET_NEW_SEARCH_PARAMS:
       return {
         ...state,
-        listProduct: activeList,
-        activeType: activeType,
-        view: item ? item : state.view,
-        allList: { ...allList, [listToAll]: activeList },
-        startList: 0
+        params: { ...payload, _q: undefined }
       };
 
-    case GET_START_ACTIVE_LIST:
+    case SET_NEW_LIST_PRODUCT:
       return {
         ...state,
-        listProduct: payload,
-        listProductStart: payload
+        list: payload,
+        allList: { ...allList, ...payload }
       };
 
-    case CHANGE_STATE_IS_POPULAR:
-      const { isPopular } = state;
+    case CHECK_CONTROL_STATE:
       return {
         ...state,
-        listProduct: payload,
-        isPopular: !isPopular
+        ...payload
       };
 
-    case CHANGE_VIEW_STATUS:
-      const { viewOpen } = state;
+    case SET_TYPE_ALL:
+      const { params } = state;
       return {
         ...state,
-        viewOpen: !viewOpen
-      };
-
-    case CLICK_CONTROL:
-      return {
-        ...state,
-        startList: payload.startList,
-        allList: {
-          ...state.allList,
-          [payload.listToAll]: { ...payload.activeList }
-        },
-        listProduct: payload.activeList
-      };
-
-    case GET_ACTIVE_LIST_FROM_ALL_LIST:
-      return {
-        ...state,
-        listProduct: payload.activeList,
-        startList: payload.startList
+        params: { ...params, type: undefined }
       };
 
     default:
