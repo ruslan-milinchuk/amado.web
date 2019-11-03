@@ -13,6 +13,33 @@
   box-sizing: border-box;
 }
 
+.color {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 15px 0;
+}
+
+.filterItem {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 5px 8px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.filterItem:hover {
+  opacity: 1;
+}
+
+.filterItem:nth-child(4),
+.filterItem:nth-child(8) {
+  margin-right: 0;
+}
+
 .type {
 }
 
@@ -61,6 +88,7 @@
   cursor: pointer;
   position: relative;
   padding: 15px 0 15px 20px;
+  margin-bottom: 30px;
 }
 
 .popularItem:after {
@@ -86,9 +114,6 @@
   background: #007bff;
 }
 
-.color {
-}
-
 .products {
   position: relative;
   z-index: 1;
@@ -105,6 +130,12 @@
   margin: 150px 0 40px;
 }
 
+.sort:nth-child(2) {
+  position: absolute;
+  top: 0;
+  right: 170px;
+}
+
 .view {
   display: flex;
   align-items: center;
@@ -113,6 +144,7 @@
   height: 40px;
   background: #f5f7fa;
   position: relative;
+  margin-right: 10px;
 }
 
 .viewTitle {
@@ -130,7 +162,7 @@
 }
 
 .dropDownList {
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   left: 41px;
   top: 45px;
@@ -155,12 +187,27 @@
   display: none;
 }
 
+.closeMenuActive {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  left: 0;
+  top: 0;
+}
+
+.closeMenuUnactive {
+  display: none;
+}
+
 .viewActive {
   color: #fbb710;
+  position: relative;
 }
 
 .viewControl {
   transform: rotate(-180deg);
+  cursor: pointer;
 }
 
 .viewControl > svg {
@@ -209,7 +256,7 @@
   cursor: pointer;
 }
 
-.basketActive{
+.basketActive {
   color: #fbb710;
 }
 
@@ -291,4 +338,15 @@
 
 .controlLeft {
   transform: rotate(-90deg);
+}
+
+.controlRightUnActive,
+.controlLeftUnActive {
+  cursor: no-drop;
+  color: white;
+}
+
+.controlRightUnActive:hover,
+.controlLeftUnActive:hover {
+  background-color: #f5f7fa;
 }

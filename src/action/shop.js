@@ -1,250 +1,119 @@
 import {
-  START_DATA_FILTER,
-  END_DATA_FILTER,
-  ERROR_DATA_FILTER,
-  GET_DATA_FILTER,
-  GET_START_ACTIVE_LIST,
-  GET_ACTIVE_LIST,
-  CHANGE_STATE_IS_POPULAR,
-  SHOP_STORAGE,
-  CHANGE_VIEW_STATUS,
-  CLICK_CONTROL,
-  GET_ACTIVE_LIST_FROM_ALL_LIST
+  SET_NEW_LIST_PRODUCT,
+  SET_NEW_SEARCH_PARAMS,
+  CHECK_CONTROL_STATE,
+  SET_TYPE_ALL
 } from "../constants";
+import { GET_START_PAGE } from "../constants";
 import apiFetch from "../utils/apiFetch";
 import { isEmpty } from "../utils/isEmpty";
-import { setCartToStorage } from "../utils/setCartToStorage";
-import { getCartFromStorage } from "../utils/getCartFromStorage";
 
-export const getDataFilter = () => {
+const serialize = obj => {
+  const objToString = JSON.stringify(obj);
+  return objToString
+    .replace(/["{}]/g, "")
+    .replace(/,/g, "&")
+    .replace(/:/g, "=")
+    .replace("At=", "At:")
+    .replace("ce=", "ce:");
+};
+
+export const startPage = () => {
   return async (dispatch, getState) => {
     const { shop } = getState();
-    if (!isEmpty(shop.types) && !isEmpty(shop.popular)) {
-      return;
-    }
+    const { params } = shop;
+    const res = await apiFetch(`/products?${serialize(params)}`);
+    const data = await res.json();
+    dispatch({
+      type: GET_START_PAGE,
+      payload: { [serialize(params)]: data }
+    });
+  };
+};
 
-    dispatch({ type: START_DATA_FILTER });
-
-    const limit = 100;
-    const storage = await getCartFromStorage(SHOP_STORAGE);
-    if (storage.typesAndPopular) {
-      dispatch({ type: END_DATA_FILTER });
-      return dispatch({
-        type: GET_DATA_FILTER,
-        payload: storage.typesAndPopular
-      });
-    }
-
-    if (!storage.typesAndPopular) {
-      const getTypeList = () => {
-        let listTypes = [];
-        let start = 0;
-        async function checkIsAll() {
-          const res = await apiFetch(
-            `/products?_start=${start}&_limit=${limit}`
-          );
-          const data = await res.json();
-          await data.map(item => {
-            if (listTypes.indexOf(item.type) === -1) {
-              return (listTypes = [...listTypes, item.type]);
-            }
-          });
-          if (data.length) {
-            start += limit;
-            return checkIsAll();
-          } else return listTypes;
-        }
-        return checkIsAll();
-      };
-      const res = await apiFetch("/products?isTop=true");
-      const popular = await res.json();
-      const types = await getTypeList();
-
-      if (types && popular) {
-        dispatch({ type: END_DATA_FILTER });
-      } else {
-        return dispatch({
-          type: ERROR_DATA_FILTER,
-          payload: "FALL get filter"
-        });
-      }
-      await setCartToStorage(SHOP_STORAGE, {
-        ...storage,
-        typesAndPopular: {
-          types,
-          popular
-        }
-      });
+export const changeParams = (name, value) => {
+  return async (dispatch, getState) => {
+    const { shop } = getState();
+    const { params, allList } = shop;
+    if (allList[serialize({ ...params, [name]: value })]) {
+      const newParams = { ...params, [name]: value };
       dispatch({
-        type: GET_DATA_FILTER,
-        payload: {
-          types,
-          popular
-        }
+        type: SET_NEW_SEARCH_PARAMS,
+        payload: newParams
+      });
+      return dispatch({
+        type: SET_NEW_LIST_PRODUCT,
+        payload: { [serialize(newParams)]: allList[serialize(newParams)] }
       });
     }
-  };
-};
-
-export const getActiveList = (activeType, item) => {
-  return async (dispatch, getState) => {
-    const { shop } = getState();
-    const { view, startList, allList } = shop;
-    const listToAll = `from${startList}View${view}Type${activeType}`;
-    if (allList[listToAll]) {
+    const { _start, type } = params;
+    if (name !== "_start" && _start !== 0) {
       return dispatch({
-        type: GET_ACTIVE_LIST,
-        payload: {
-          activeList: Object.values(allList[listToAll]),
-          activeType,
-          item,
-          listToAll
-        }
+        type: SET_NEW_SEARCH_PARAMS,
+        payload: { ...params, _start: 0 }
       });
     }
 
-    if (activeType) {
-      const res = await apiFetch(
-        `/products?type=${activeType}&_start=${startList}&_limit=${
-          item ? item : view
-        }`
-      );
-
-      const activeList = await res.json();
-      return dispatch({
-        type: GET_ACTIVE_LIST,
-        payload: { activeList, activeType, item, listToAll }
-      });
-    } else {
-      const res = await apiFetch(
-        `/products?_start=${startList}&_limit=${item ? item : view}`
-      );
-      const activeList = await res.json();
+    if (name === "isTop" && params.isTop) {
+      const newParams = { ...params, [name]: undefined };
       dispatch({
-        type: GET_ACTIVE_LIST,
-        payload: { activeList, activeType, item, listToAll }
+        type: SET_NEW_SEARCH_PARAMS,
+        payload: newParams
       });
-    }
-  };
-};
+      const res = await apiFetch(`/products?${serialize(newParams)}`);
+      const data = await res.json();
 
-export const startActiveProduct = () => {
-  return async (dispatch, getState) => {
-    const { shop } = getState();
-    const { view, startList } = shop;
-    const res = await apiFetch(`/products?_start=${startList}&_limit=${view}`);
-    const listProduct = await res.json();
-    dispatch({ type: GET_START_ACTIVE_LIST, payload: listProduct });
-  };
-};
-
-export const changeStateIsPopular = () => {
-  return (dispatch, getState) => {
-    const { shop } = getState();
-    const { view, popular, isPopular, listProductStart } = shop;
-    if (!isPopular) {
       return dispatch({
-        type: CHANGE_STATE_IS_POPULAR,
-        payload: popular.slice(0, view)
+        type: SET_NEW_LIST_PRODUCT,
+        payload: { [serialize(params)]: data }
       });
     }
-    if (isPopular && view === listProductStart.length) {
-      dispatch({ type: CHANGE_STATE_IS_POPULAR, payload: listProductStart });
-    }
-  };
-};
 
-export const changeViewStatus = () => {
-  return dispatch => {
-    dispatch({ type: CHANGE_VIEW_STATUS });
-  };
-};
-
-export const clickControlRight = () => {
-  return async (dispatch, getState) => {
-    const { shop } = getState();
-    const { startList, view, activeType, allList } = shop;
-    const listToAll = `from${startList + view}View${view}Type${activeType}`;
-    if (allList[listToAll]) {
+    const newParams = { ...params, [name]: value };
+    const res = await apiFetch(`/products?${serialize(newParams)}`);
+    const data = await res.json();
+    if (res.status !== 200) {
+      const newParams = { ...params, _start: 0 };
+      dispatch({ type: SET_NEW_SEARCH_PARAMS, payload: newParams });
+      dispatch({
+        type: CHECK_CONTROL_STATE,
+        payload: { controlLeftActive: false }
+      });
+      const res = await apiFetch(`/products?${serialize(newParams)}`);
+      const data = await res.json();
       return dispatch({
-        type: GET_ACTIVE_LIST_FROM_ALL_LIST,
-        payload: {
-          activeList: Object.values(allList[listToAll]),
-          startList: startList + view
-        }
+        type: SET_NEW_LIST_PRODUCT,
+        payload: { [serialize(newParams)]: data }
       });
     }
-    if (activeType.length) {
-      const res = await apiFetch(
-        `/products?type=${activeType}&_start=${startList + view}&_limit=${view}`
-      );
-      const activeList = await res.json();
-      if (!isEmpty(activeList)) {
-        dispatch({
-          type: CLICK_CONTROL,
-          payload: { listToAll, activeList, startList: startList + view }
-        });
-      }
+
+    if (res.status === 200) {
+      dispatch({
+        type: CHECK_CONTROL_STATE,
+        payload: { controlRightActive: true, controlLeftActive: true }
+      });
     }
 
-    if (!activeType.length) {
-      const res = await apiFetch(
-        `/products?_start=${startList + view}&_limit=${view}`
-      );
-      const activeList = await res.json();
-
-      if (activeList) {
-        dispatch({
-          type: CLICK_CONTROL,
-          payload: { listToAll, activeList, startList: startList + view }
-        });
-      }
+    if (name !== type && name !== "_start") {
+      dispatch({
+        type: CHECK_CONTROL_STATE,
+        payload: { controlLeftActive: false }
+      });
     }
-  };
-};
 
-export const clickControlLeft = () => {
-  return async (dispatch, getState) => {
-    const { shop } = getState();
-    const { startList, view, activeType, allList } = shop;
-    const listToAll = `from${startList - view}View${view}Type${activeType}`;
-    if (startList - view < 0) {
-      return;
-    }
-    if (allList[listToAll]) {
+    if (isEmpty(data)) {
       return dispatch({
-        type: GET_ACTIVE_LIST_FROM_ALL_LIST,
-        payload: {
-          activeList: Object.values(allList[listToAll]),
-          startList: startList - view
-        }
+        type: CHECK_CONTROL_STATE,
+        payload: { controlRightActive: false }
       });
     }
-    if (activeType.length) {
-      const res = await apiFetch(
-        `/products?type=${activeType}&_start=${startList - view}&_limit=${view}`
-      );
-      const activeList = await res.json();
-      if (!isEmpty(activeList)) {
-        dispatch({
-          type: CLICK_CONTROL,
-          payload: { listToAll, activeList, startList: startList - view }
-        });
-      }
+    dispatch({ type: SET_NEW_SEARCH_PARAMS, payload: newParams });
+    if (name === "_q") {
+      dispatch({ type: SET_TYPE_ALL });
     }
-
-    if (!activeType.length) {
-      const res = await apiFetch(
-        `/products?_start=${startList - view}&_limit=${view}`
-      );
-      const activeList = await res.json();
-
-      if (activeList) {
-        dispatch({
-          type: CLICK_CONTROL,
-          payload: { listToAll, activeList, startList: startList - view }
-        });
-      }
-    }
+    dispatch({
+      type: SET_NEW_LIST_PRODUCT,
+      payload: { [serialize(newParams)]: data }
+    });
   };
 };
