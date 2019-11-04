@@ -12,12 +12,16 @@ import {
 import TriangleTop from "../../icons/TriangleTop";
 import Basket from "../../icons/Basket";
 import { isEmpty } from "../../utils/isEmpty";
+import { Link } from "react-router-dom";
 
 class Shop extends Component {
   state = {
     dropViewIsOpen: false,
     dropDateIsOpen: false,
-    dropPriceIsOpen: false
+    dropPriceIsOpen: false,
+    valueDropPrice: "",
+    valueDropDate: "asc",
+    valueDropView: 12
   };
   componentDidMount() {
     const { startPage } = this.props;
@@ -27,18 +31,22 @@ class Shop extends Component {
   render() {
     const { shop, changeParams, addToCart, cartList } = this.props;
     const { params, list, controlRightActive, controlLeftActive } = shop;
-    const { _limit, isTop, type, _start, _sort } = params;
-    const { dropViewIsOpen, dropDateIsOpen, dropPriceIsOpen } = this.state;
+    const { _limit, isTop, type, _start } = params;
+    const {
+      dropViewIsOpen,
+      dropDateIsOpen,
+      dropPriceIsOpen,
+      valueDropPrice,
+      valueDropDate,
+      valueDropView
+    } = this.state;
     return (
       <div className={styles.wrapper}>
         <div className={styles.filter}>
           <div className={styles.type}>
             <ListTypes changeParams={changeParams} type={type} />
           </div>
-          <div
-            className={styles.isPopular}
-            onClick={() => changeParams("isTop", true)}
-          >
+          <div onClick={() => changeParams("isTop", true)}>
             <h3 className={styles.typeTitle}>Popular</h3>
             <p
               className={
@@ -56,27 +64,28 @@ class Shop extends Component {
         <div className={styles.products}>
           <div className={styles.sort}>
             <DropDownHeader
-              sortBy={_sort.substr(9, 4)}
               dropDownIsOpen={dropDateIsOpen}
               title="Date"
               changeParamsValue="createdAt:"
               changeParamsName="_sort"
-              arr={listDropDownDate}
+              arr={listDropDownSort}
               changeDropDownState={this.changeDropDownState}
               changeParams={changeParams}
+              valueDropDown={valueDropDate}
+              changeValueDropDown={this.changeValueDropDown}
             />
             <DropDownHeader
-              sortBy={_sort.substr(9, 4)}
               dropDownIsOpen={dropPriceIsOpen}
               changeParamsValue="price:"
               changeParamsName="_sort"
               title="Price"
-              arr={listDropDownPrice}
+              arr={listDropDownSort}
               changeDropDownState={this.changeDropDownState}
               changeParams={changeParams}
+              valueDropDown={valueDropPrice}
+              changeValueDropDown={this.changeValueDropDown}
             />
             <DropDownHeader
-              sortBy={_sort.substr(9, 4)}
               dropDownIsOpen={dropViewIsOpen}
               changeParamsValue=""
               changeParamsName="_limit"
@@ -84,6 +93,8 @@ class Shop extends Component {
               arr={listDropDownView}
               changeDropDownState={this.changeDropDownState}
               changeParams={changeParams}
+              valueDropDown={valueDropView}
+              changeValueDropDown={this.changeValueDropDown}
             />
           </div>
           <CartList list={list} addToCart={addToCart} cartList={cartList} />
@@ -94,7 +105,7 @@ class Shop extends Component {
                   ? `${styles.controlLeft} ${styles.controlLeftUnActive}`
                   : `${styles.controlLeft}`
               }
-              onClick={() => changeParams("_start", _start - _limit)}
+              onClick={() => changeParams("_start", _start - parseInt(_limit))}
             >
               <TriangleTop />
             </div>
@@ -104,7 +115,7 @@ class Shop extends Component {
                   ? `${styles.controlRight} ${styles.controlRightUnActive}`
                   : `${styles.controlRight}`
               }
-              onClick={() => changeParams("_start", _start + _limit)}
+              onClick={() => changeParams("_start", _start + parseInt(_limit))}
             >
               <TriangleTop />
             </div>
@@ -123,6 +134,20 @@ class Shop extends Component {
     }
     if (title === "View") {
       return this.setState({ dropViewIsOpen: !dropDownIsOpen });
+    }
+  };
+
+  changeValueDropDown = (changeParamsValue, item) => {
+    console.log("value", changeParamsValue);
+    console.log("item", item);
+    if (changeParamsValue === "price:") {
+      return this.setState({ valueDropPrice: item, valueDropDate: '' });
+    }
+    if (changeParamsValue === "createdAt:") {
+      return this.setState({ valueDropDate: item, valueDropPrice: '' });
+    }
+    if (changeParamsValue === "") {
+      return this.setState({ valueDropView: item });
     }
   };
 }
@@ -158,11 +183,9 @@ const CartList = ({ list, addToCart, cartList }) => {
     <div className={styles.cartList}>
       {Object.values(list)[0].map(({ title, price, slider, id }, index) => (
         <div key={index} className={styles.item}>
-          <div className={`${styles.inner} ${styles.correlationHeight}`}>
-            <div className={styles.content}>
-              <img className={styles.img} src={slider[0].large} alt="product" />
-            </div>
-          </div>
+          <Link to={`/product/${id}`} className={styles.content}>
+            <img className={styles.img} src={slider[0].large} alt="product" />
+          </Link>
           <div className={styles.imgData}>
             <p className={styles.price}>{price}</p>
             <h4 className={styles.title}>{title}</h4>
@@ -185,9 +208,7 @@ const CartList = ({ list, addToCart, cartList }) => {
 
 const listDropDownView = [MIN_VIEW_SHOP, AVERAGE_VIEW_SHOP, MAX_VIEW_SHOP];
 
-const listDropDownDate = ["desc", "asc"];
-
-const listDropDownPrice = ["desc", "asc"];
+const listDropDownSort = ["desc", "asc"];
 
 const DropDown = ({
   changeParams,
@@ -195,8 +216,7 @@ const DropDown = ({
   arr,
   changeParamsValue,
   changeParamsName,
-  changeDropDownState,
-  title
+  changeValueDropDown
 }) => {
   return (
     <div
@@ -210,17 +230,17 @@ const DropDown = ({
         <p
           className={styles.viewActive}
           onClick={() =>
-            changeParams(changeParamsName, `${changeParamsValue}${item}`)
+            changeParams(changeParamsName, `${changeParamsValue}${item}`) &&
+            changeValueDropDown(changeParamsValue, item)
           }
           key={index}
         >
-          <div
+          <span
             className={
               dropDownIsOpen
                 ? `${styles.closeMenuActive}`
                 : `${styles.closeMenuUnactive}`
             }
-            onClick={() => changeDropDownState(title, dropDownIsOpen)}
           />
           {item}
         </p>
@@ -254,17 +274,21 @@ const FilterColor = ({ changeParams }) => {
 };
 
 const DropDownHeader = ({
-  sortBy,
   dropDownIsOpen,
   title,
   arr,
   changeDropDownState,
   changeParams,
   changeParamsValue,
-  changeParamsName
+  changeParamsName,
+  valueDropDown,
+  changeValueDropDown
 }) => {
   return (
-    <div className={styles.view}>
+    <div
+      className={styles.view}
+      onClick={() => changeDropDownState(title, dropDownIsOpen)}
+    >
       <h4 className={styles.viewTitle}>{title}</h4>
       <div className={styles.viewQty}>
         <DropDown
@@ -275,10 +299,11 @@ const DropDownHeader = ({
           dropDownIsOpen={dropDownIsOpen}
           arr={arr}
           title={title}
+          changeValueDropDown={changeValueDropDown}
         />
       </div>
+      <p className={styles.valueDropDown}>{valueDropDown}</p>
       <div
-        onClick={() => changeDropDownState(title, dropDownIsOpen)}
         className={
           dropDownIsOpen
             ? `${styles.viewControl} ${styles.viewControlOpen}`

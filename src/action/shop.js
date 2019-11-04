@@ -35,7 +35,7 @@ export const changeParams = (name, value) => {
   return async (dispatch, getState) => {
     const { shop } = getState();
     const { params, allList } = shop;
-    if (allList[serialize({ ...params, [name]: value })]) {
+    if (allList[serialize({ ...params, [name]: value })] && name !== "isTop") {
       const newParams = { ...params, [name]: value };
       dispatch({
         type: SET_NEW_SEARCH_PARAMS,
@@ -47,7 +47,7 @@ export const changeParams = (name, value) => {
       });
     }
     const { _start, type } = params;
-    if (name !== "_start" && _start !== 0) {
+    if (name !== "_start" && _start !== 0 && name !== "_sort") {
       return dispatch({
         type: SET_NEW_SEARCH_PARAMS,
         payload: { ...params, _start: 0 }
@@ -109,7 +109,7 @@ export const changeParams = (name, value) => {
     }
     dispatch({ type: SET_NEW_SEARCH_PARAMS, payload: newParams });
     if (name === "_q") {
-      dispatch({ type: SET_TYPE_ALL });
+      dispatch({ type: SET_TYPE_ALL, payload: value });
     }
     dispatch({
       type: SET_NEW_LIST_PRODUCT,

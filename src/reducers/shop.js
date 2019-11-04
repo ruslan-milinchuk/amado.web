@@ -10,7 +10,7 @@ import {
 const BASIC = {
   params: {
     type: undefined,
-    _sort: "createdAt",
+    _sort: "createdAt:asc",
     _start: 0,
     _limit: MIN_VIEW_SHOP,
     _q: undefined,
@@ -55,7 +55,7 @@ export const shop = (state = BASIC, { type, payload }) => {
       const { params } = state;
       return {
         ...state,
-        params: { ...params, type: undefined }
+        params: { ...params, type: undefined, isTop: undefined, _q: payload }
       };
 
     default:
