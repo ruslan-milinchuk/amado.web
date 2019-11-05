@@ -1,10 +1,7 @@
 import {
   MIN_VIEW_SHOP,
-  GET_START_PAGE,
   SET_NEW_SEARCH_PARAMS,
   SET_NEW_LIST_PRODUCT,
-  CHECK_CONTROL_STATE,
-  SET_TYPE_ALL
 } from "../constants";
 
 const BASIC = {
@@ -16,46 +13,22 @@ const BASIC = {
     _q: undefined,
     isTop: undefined
   },
-  list: {},
-  allList: {},
-  controlLeftActive: false,
-  controlRightActive: true
+  list: {}
 };
 
 export const shop = (state = BASIC, { type, payload }) => {
-  const { allList } = state;
   switch (type) {
-    case GET_START_PAGE:
-      return {
-        ...state,
-        list: payload,
-        allList: { ...allList, ...payload }
-      };
-
     case SET_NEW_SEARCH_PARAMS:
       return {
         ...state,
-        params: { ...payload, _q: undefined }
+        params: { ...payload }
       };
 
     case SET_NEW_LIST_PRODUCT:
+      const { list } = state;
       return {
         ...state,
-        list: payload,
-        allList: { ...allList, ...payload }
-      };
-
-    case CHECK_CONTROL_STATE:
-      return {
-        ...state,
-        ...payload
-      };
-
-    case SET_TYPE_ALL:
-      const { params } = state;
-      return {
-        ...state,
-        params: { ...params, type: undefined, isTop: undefined, _q: payload }
+        list: { ...list, ...payload }
       };
 
     default:
