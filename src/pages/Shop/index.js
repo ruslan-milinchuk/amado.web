@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./shop.module.css";
 import { connect } from "react-redux";
-import { changeParams, startPage } from "../../action/shop";
+import { getListProducts } from "../../action/shop";
 import { addToCart } from "../../action/cart";
 import Loading from "../../components/Loading";
 import {
@@ -13,40 +13,44 @@ import TriangleTop from "../../icons/TriangleTop";
 import Basket from "../../icons/Basket";
 import { isEmpty } from "../../utils/isEmpty";
 import { Link } from "react-router-dom";
+import { stringifySearchParams } from "../../utils/stringifySearchParams";
 
 class Shop extends Component {
   state = {
     dropViewIsOpen: false,
     dropDateIsOpen: false,
-    dropPriceIsOpen: false,
-    valueDropPrice: "",
-    valueDropDate: "asc",
-    valueDropView: 12
+    dropPriceIsOpen: false
   };
   componentDidMount() {
-    const { startPage } = this.props;
-    startPage();
+    const { getListProducts, shop } = this.props;
+    const { params } = shop;
+    getListProducts(params);
   }
 
   render() {
-    const { shop, changeParams, addToCart, cartList } = this.props;
-    const { params, list, controlRightActive, controlLeftActive } = shop;
-    const { _limit, isTop, type, _start } = params;
-    const {
-      dropViewIsOpen,
-      dropDateIsOpen,
-      dropPriceIsOpen,
-      valueDropPrice,
-      valueDropDate,
-      valueDropView
-    } = this.state;
+    const { shop, getListProducts, addToCart, cartList } = this.props;
+    const { params, list, controlRightActive } = shop;
+    const { _limit, isTop, type, _start, _sort } = params;
+    const { dropViewIsOpen, dropDateIsOpen, dropPriceIsOpen } = this.state;
     return (
       <div className={styles.wrapper}>
         <div className={styles.filter}>
           <div className={styles.type}>
-            <ListTypes changeParams={changeParams} type={type} />
+            <ListTypes
+              getListProducts={getListProducts}
+              type={type}
+              params={params}
+            />
           </div>
-          <div onClick={() => changeParams("isTop", true)}>
+          <div
+            onClick={() =>
+              getListProducts({
+                ...params,
+                isTop: isTop ? undefined : true,
+                _q: undefined
+              })
+            }
+          >
             <h3 className={styles.typeTitle}>Popular</h3>
             <p
               className={
@@ -59,53 +63,63 @@ class Shop extends Component {
             </p>
           </div>
           <h3 className={styles.typeTitle}>Color</h3>
-          <FilterColor changeParams={changeParams} />
+          <FilterColor getListProducts={getListProducts} params={params} />
         </div>
         <div className={styles.products}>
           <div className={styles.sort}>
             <DropDownHeader
-              dropDownIsOpen={dropDateIsOpen}
+              dropMenuIsOpen={dropDateIsOpen}
               title="Date"
               changeParamsValue="createdAt:"
               changeParamsName="_sort"
               arr={listDropDownSort}
               changeDropDownState={this.changeDropDownState}
-              changeParams={changeParams}
-              valueDropDown={valueDropDate}
-              changeValueDropDown={this.changeValueDropDown}
+              getListProducts={getListProducts}
+              _sort={_sort}
+              params={params}
             />
             <DropDownHeader
-              dropDownIsOpen={dropPriceIsOpen}
+              dropMenuIsOpen={dropPriceIsOpen}
               changeParamsValue="price:"
               changeParamsName="_sort"
               title="Price"
               arr={listDropDownSort}
               changeDropDownState={this.changeDropDownState}
-              changeParams={changeParams}
-              valueDropDown={valueDropPrice}
-              changeValueDropDown={this.changeValueDropDown}
+              getListProducts={getListProducts}
+              _sort={_sort}
+              params={params}
             />
             <DropDownHeader
-              dropDownIsOpen={dropViewIsOpen}
+              dropMenuIsOpen={dropViewIsOpen}
               changeParamsValue=""
               changeParamsName="_limit"
               title="View"
               arr={listDropDownView}
               changeDropDownState={this.changeDropDownState}
-              changeParams={changeParams}
-              valueDropDown={valueDropView}
-              changeValueDropDown={this.changeValueDropDown}
+              getListProducts={getListProducts}
+              _limit={_limit}
+              params={params}
             />
           </div>
-          <CartList list={list} addToCart={addToCart} cartList={cartList} />
+          <CartList
+            list={list}
+            params={params}
+            addToCart={addToCart}
+            cartList={cartList}
+          />
           <div className={styles.control}>
             <div
               className={
-                !controlLeftActive
+                !_start
                   ? `${styles.controlLeft} ${styles.controlLeftUnActive}`
                   : `${styles.controlLeft}`
               }
-              onClick={() => changeParams("_start", _start - parseInt(_limit))}
+              onClick={() =>
+                getListProducts({
+                  ...params,
+                  _start: _start - parseInt(_limit)
+                })
+              }
             >
               <TriangleTop />
             </div>
@@ -115,7 +129,12 @@ class Shop extends Component {
                   ? `${styles.controlRight} ${styles.controlRightUnActive}`
                   : `${styles.controlRight}`
               }
-              onClick={() => changeParams("_start", _start + parseInt(_limit))}
+              onClick={() =>
+                getListProducts({
+                  ...params,
+                  _start: _start + parseInt(_limit)
+                })
+              }
             >
               <TriangleTop />
             </div>
@@ -125,44 +144,38 @@ class Shop extends Component {
     );
   }
 
-  changeDropDownState = (title, dropDownIsOpen) => {
-    if (title === "Price") {
-      return this.setState({ dropPriceIsOpen: !dropDownIsOpen });
-    }
-    if (title === "Date") {
-      return this.setState({ dropDateIsOpen: !dropDownIsOpen });
-    }
-    if (title === "View") {
-      return this.setState({ dropViewIsOpen: !dropDownIsOpen });
-    }
-  };
-
-  changeValueDropDown = (changeParamsValue, item) => {
-    console.log("value", changeParamsValue);
-    console.log("item", item);
-    if (changeParamsValue === "price:") {
-      return this.setState({ valueDropPrice: item, valueDropDate: '' });
-    }
-    if (changeParamsValue === "createdAt:") {
-      return this.setState({ valueDropDate: item, valueDropPrice: '' });
-    }
-    if (changeParamsValue === "") {
-      return this.setState({ valueDropView: item });
+  changeDropDownState = (title, dropMenuIsOpen) => {
+    switch (title) {
+      case "Price":
+        return this.setState({ dropPriceIsOpen: !dropMenuIsOpen });
+      case "Date":
+        return this.setState({ dropDateIsOpen: !dropMenuIsOpen });
+      case "View":
+        return this.setState({ dropViewIsOpen: !dropMenuIsOpen });
+      default:
+        return "";
     }
   };
 }
 
-const types = ["chair", "sofa", "storage", "beds", "lamps"];
+const types = ["all", "chair", "sofa", "storage", "beds", "lamps"];
 
-const ListTypes = ({ changeParams, type }) => {
+const ListTypes = ({ getListProducts, type, params }) => {
   return (
     <ul className={styles.listType}>
       <h3 className={styles.typeTitle}>Categories</h3>
       {types.map((item, index) => (
         <li
-          onClick={() => changeParams("type", item)}
+          onClick={() =>
+            getListProducts({
+              ...params,
+              type: item === "all" ? undefined : item,
+              _start: 0,
+              _q: undefined
+            })
+          }
           className={
-            type === item
+            type === item || (!type && item === "all")
               ? `${styles.typeItemActive} ${styles.typeItem}`
               : `${styles.typeItem}`
           }
@@ -175,13 +188,14 @@ const ListTypes = ({ changeParams, type }) => {
   );
 };
 
-const CartList = ({ list, addToCart, cartList }) => {
-  if (list && isEmpty(list)) {
+const CartList = ({ list, params, addToCart, cartList }) => {
+  if (isEmpty(list) || !list[stringifySearchParams(params)]) {
     return <Loading />;
   }
+  const searchList = list[stringifySearchParams(params)];
   return (
     <div className={styles.cartList}>
-      {Object.values(list)[0].map(({ title, price, slider, id }, index) => (
+      {searchList.map(({ title, price, slider, id }, index) => (
         <div key={index} className={styles.item}>
           <Link to={`/product/${id}`} className={styles.content}>
             <img className={styles.img} src={slider[0].large} alt="product" />
@@ -211,33 +225,42 @@ const listDropDownView = [MIN_VIEW_SHOP, AVERAGE_VIEW_SHOP, MAX_VIEW_SHOP];
 const listDropDownSort = ["desc", "asc"];
 
 const DropDown = ({
-  changeParams,
-  dropDownIsOpen,
+  getListProducts,
+  dropMenuIsOpen,
   arr,
   changeParamsValue,
   changeParamsName,
-  changeValueDropDown
+  params
 }) => {
   return (
     <div
       className={
-        !dropDownIsOpen
-          ? `${styles.dropDownListClose}`
-          : `${styles.dropDownList}`
+        !dropMenuIsOpen
+          ? `${styles.dropMenuListClose}`
+          : `${styles.dropMenuList}`
       }
     >
       {arr.map((item, index) => (
         <p
-          className={styles.viewActive}
+          className={styles.dropMenuItem}
           onClick={() =>
-            changeParams(changeParamsName, `${changeParamsValue}${item}`) &&
-            changeValueDropDown(changeParamsValue, item)
+            getListProducts(
+              Object.assign(
+                params,
+                changeParamsName === "_sort" && {
+                  _sort: `${changeParamsValue}${item}`
+                },
+                changeParamsName === "_limit" && {
+                  _limit: `${changeParamsValue}${item}`
+                }
+              )
+            )
           }
           key={index}
         >
           <span
             className={
-              dropDownIsOpen
+              dropMenuIsOpen
                 ? `${styles.closeMenuActive}`
                 : `${styles.closeMenuUnactive}`
             }
@@ -258,15 +281,25 @@ const colorList = [
   "pink",
   "blue"
 ];
-const FilterColor = ({ changeParams }) => {
+const FilterColor = ({ getListProducts, params }) => {
+  const { _q } = params;
   return (
     <div className={styles.color}>
       {colorList.map((item, index) => (
         <div
           key={index}
           style={{ background: item }}
-          className={styles.filterItem}
-          onClick={() => changeParams("_q", item)}
+          className={
+            _q === item ? `${styles.filterItemActive}` : `${styles.filterItem}`
+          }
+          onClick={() =>
+            getListProducts({
+              ...params,
+              _q: item,
+              type: undefined,
+              isTop: undefined
+            })
+          }
         />
       ))}
     </div>
@@ -274,40 +307,50 @@ const FilterColor = ({ changeParams }) => {
 };
 
 const DropDownHeader = ({
-  dropDownIsOpen,
+  dropMenuIsOpen,
   title,
   arr,
   changeDropDownState,
-  changeParams,
+  getListProducts,
   changeParamsValue,
   changeParamsName,
-  valueDropDown,
-  changeValueDropDown
+  _limit,
+  _sort,
+  params
 }) => {
+  const createdAtSortStatus =
+    _sort && _sort.includes("createdAt") && _sort.split(":")[1];
+  const priceAtSortStatus =
+    _sort && _sort.includes("price") && _sort.split(":")[1];
+
   return (
     <div
-      className={styles.view}
-      onClick={() => changeDropDownState(title, dropDownIsOpen)}
+      className={styles.dropMenu}
+      onClick={() => changeDropDownState(title, dropMenuIsOpen)}
     >
-      <h4 className={styles.viewTitle}>{title}</h4>
-      <div className={styles.viewQty}>
+      <h4 className={styles.dropMenuTitle}>{title}</h4>
+      <div className={styles.dropMenuQty}>
         <DropDown
-          changeParams={changeParams}
+          getListProducts={getListProducts}
           changeParamsValue={changeParamsValue}
           changeParamsName={changeParamsName}
           changeDropDownState={changeDropDownState}
-          dropDownIsOpen={dropDownIsOpen}
+          dropMenuIsOpen={dropMenuIsOpen}
           arr={arr}
           title={title}
-          changeValueDropDown={changeValueDropDown}
+          params={params}
         />
       </div>
-      <p className={styles.valueDropDown}>{valueDropDown}</p>
+      <p className={styles.valueDropDown}>
+        {(title === "Date" && createdAtSortStatus) ||
+          (title === "Price" && priceAtSortStatus) ||
+          (title === "View" && _limit)}
+      </p>
       <div
         className={
-          dropDownIsOpen
-            ? `${styles.viewControl} ${styles.viewControlOpen}`
-            : `${styles.viewControl}`
+          dropMenuIsOpen
+            ? `${styles.dropMenuControl} ${styles.dropMenuControlOpen}`
+            : `${styles.dropMenuControl}`
         }
       >
         <TriangleTop />
@@ -321,8 +364,7 @@ const ShopWithFilter = connect(
     cartList: cart.cartList
   }),
   {
-    changeParams,
-    startPage,
+    getListProducts,
     addToCart
   }
 )(Shop);
