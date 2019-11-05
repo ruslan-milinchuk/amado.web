@@ -17,9 +17,7 @@ import { stringifySearchParams } from "../../utils/stringifySearchParams";
 
 class Shop extends Component {
   state = {
-    dropViewIsOpen: false,
-    dropDateIsOpen: false,
-    dropPriceIsOpen: false
+    dropDownModalStatus: null
   };
   componentDidMount() {
     const { getListProducts, shop } = this.props;
@@ -31,7 +29,7 @@ class Shop extends Component {
     const { shop, getListProducts, addToCart, cartList } = this.props;
     const { params, list, controlRightActive } = shop;
     const { _limit, isTop, type, _start, _sort } = params;
-    const { dropViewIsOpen, dropDateIsOpen, dropPriceIsOpen } = this.state;
+    const { dropDownModalStatus } = this.state;
     return (
       <div className={styles.wrapper}>
         <div className={styles.filter}>
@@ -68,37 +66,46 @@ class Shop extends Component {
         <div className={styles.products}>
           <div className={styles.sort}>
             <DropDownHeader
-              dropMenuIsOpen={dropDateIsOpen}
+              onClick={value =>
+                getListProducts({ ...params, _sort: `createdAt:${value}` })
+              }
+              visible={dropDownModalStatus === "DATE"}
               title="Date"
-              changeParamsValue="createdAt:"
-              changeParamsName="_sort"
               arr={listDropDownSort}
-              changeDropDownState={this.changeDropDownState}
-              getListProducts={getListProducts}
-              _sort={_sort}
-              params={params}
+              changeDropDownState={() =>
+                this.setState({
+                  dropDownModalStatus: dropDownModalStatus ? null : "DATE"
+                })
+              }
+              value={
+                _sort && _sort.includes("createdAt") && _sort.split(":")[1]
+              }
             />
             <DropDownHeader
-              dropMenuIsOpen={dropPriceIsOpen}
-              changeParamsValue="price:"
-              changeParamsName="_sort"
+              onClick={value =>
+                getListProducts({ ...params, _sort: `price:${value}` })
+              }
+              visible={dropDownModalStatus === "PRICE"}
               title="Price"
               arr={listDropDownSort}
-              changeDropDownState={this.changeDropDownState}
-              getListProducts={getListProducts}
-              _sort={_sort}
-              params={params}
+              changeDropDownState={() =>
+                this.setState({
+                  dropDownModalStatus: dropDownModalStatus ? null : "PRICE"
+                })
+              }
+              value={_sort && _sort.includes("price") && _sort.split(":")[1]}
             />
             <DropDownHeader
-              dropMenuIsOpen={dropViewIsOpen}
-              changeParamsValue=""
-              changeParamsName="_limit"
+              onClick={value => getListProducts({ ...params, _limit: value })}
+              visible={dropDownModalStatus === "VIEW"}
               title="View"
               arr={listDropDownView}
-              changeDropDownState={this.changeDropDownState}
-              getListProducts={getListProducts}
-              _limit={_limit}
-              params={params}
+              changeDropDownState={() =>
+                this.setState({
+                  dropDownModalStatus: dropDownModalStatus ? null : "VIEW"
+                })
+              }
+              value={_limit}
             />
           </div>
           <CartList
@@ -143,19 +150,6 @@ class Shop extends Component {
       </div>
     );
   }
-
-  changeDropDownState = (title, dropMenuIsOpen) => {
-    switch (title) {
-      case "Price":
-        return this.setState({ dropPriceIsOpen: !dropMenuIsOpen });
-      case "Date":
-        return this.setState({ dropDateIsOpen: !dropMenuIsOpen });
-      case "View":
-        return this.setState({ dropViewIsOpen: !dropMenuIsOpen });
-      default:
-        return "";
-    }
-  };
 }
 
 const types = ["all", "chair", "sofa", "storage", "beds", "lamps"];
@@ -224,43 +218,50 @@ const listDropDownView = [MIN_VIEW_SHOP, AVERAGE_VIEW_SHOP, MAX_VIEW_SHOP];
 
 const listDropDownSort = ["desc", "asc"];
 
-const DropDown = ({
-  getListProducts,
-  dropMenuIsOpen,
+const DropDownHeader = ({
+  title,
   arr,
-  changeParamsValue,
-  changeParamsName,
-  params
+  changeDropDownState,
+  value,
+  visible,
+  onClick
 }) => {
+  return (
+    <div className={styles.dropMenu} onClick={changeDropDownState}>
+      <h4 className={styles.dropMenuTitle}>{title}</h4>
+      <div className={styles.dropMenuQty}>
+        <DropDown arr={arr} visible={visible} onClick={onClick} />
+      </div>
+      <p className={styles.valueDropDown}>{value}</p>
+      <div
+        className={
+          visible
+            ? `${styles.dropMenuControl} ${styles.dropMenuControlOpen}`
+            : `${styles.dropMenuControl}`
+        }
+      >
+        <TriangleTop />
+      </div>
+    </div>
+  );
+};
+
+const DropDown = ({ visible, arr, onClick }) => {
   return (
     <div
       className={
-        !dropMenuIsOpen
-          ? `${styles.dropMenuListClose}`
-          : `${styles.dropMenuList}`
+        !visible ? `${styles.dropMenuListClose}` : `${styles.dropMenuList}`
       }
     >
       {arr.map((item, index) => (
         <p
           className={styles.dropMenuItem}
-          onClick={() =>
-            getListProducts(
-              Object.assign(
-                params,
-                changeParamsName === "_sort" && {
-                  _sort: `${changeParamsValue}${item}`
-                },
-                changeParamsName === "_limit" && {
-                  _limit: `${changeParamsValue}${item}`
-                }
-              )
-            )
-          }
+          onClick={() => onClick(item)}
           key={index}
         >
           <span
             className={
-              dropMenuIsOpen
+              visible
                 ? `${styles.closeMenuActive}`
                 : `${styles.closeMenuUnactive}`
             }
@@ -271,6 +272,7 @@ const DropDown = ({
     </div>
   );
 };
+
 const colorList = [
   "white",
   "black",
@@ -281,6 +283,7 @@ const colorList = [
   "pink",
   "blue"
 ];
+
 const FilterColor = ({ getListProducts, params }) => {
   const { _q } = params;
   return (
@@ -306,58 +309,6 @@ const FilterColor = ({ getListProducts, params }) => {
   );
 };
 
-const DropDownHeader = ({
-  dropMenuIsOpen,
-  title,
-  arr,
-  changeDropDownState,
-  getListProducts,
-  changeParamsValue,
-  changeParamsName,
-  _limit,
-  _sort,
-  params
-}) => {
-  const createdAtSortStatus =
-    _sort && _sort.includes("createdAt") && _sort.split(":")[1];
-  const priceAtSortStatus =
-    _sort && _sort.includes("price") && _sort.split(":")[1];
-
-  return (
-    <div
-      className={styles.dropMenu}
-      onClick={() => changeDropDownState(title, dropMenuIsOpen)}
-    >
-      <h4 className={styles.dropMenuTitle}>{title}</h4>
-      <div className={styles.dropMenuQty}>
-        <DropDown
-          getListProducts={getListProducts}
-          changeParamsValue={changeParamsValue}
-          changeParamsName={changeParamsName}
-          changeDropDownState={changeDropDownState}
-          dropMenuIsOpen={dropMenuIsOpen}
-          arr={arr}
-          title={title}
-          params={params}
-        />
-      </div>
-      <p className={styles.valueDropDown}>
-        {(title === "Date" && createdAtSortStatus) ||
-          (title === "Price" && priceAtSortStatus) ||
-          (title === "View" && _limit)}
-      </p>
-      <div
-        className={
-          dropMenuIsOpen
-            ? `${styles.dropMenuControl} ${styles.dropMenuControlOpen}`
-            : `${styles.dropMenuControl}`
-        }
-      >
-        <TriangleTop />
-      </div>
-    </div>
-  );
-};
 const ShopWithFilter = connect(
   ({ shop, cart }) => ({
     shop,

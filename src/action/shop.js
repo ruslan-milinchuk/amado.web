@@ -7,7 +7,7 @@ export const getListProducts = newParams => {
   return async (dispatch, getState) => {
     const { shop } = getState();
     const { list, params } = shop;
-    if (list[stringifySearchParams({ ...newParams })]) {
+    if (list[stringifySearchParams(newParams)]) {
       return dispatch({
         type: SET_NEW_SEARCH_PARAMS,
         payload: newParams
@@ -15,7 +15,7 @@ export const getListProducts = newParams => {
     }
     const res = await apiFetch(`/products?${stringifySearchParams(newParams)}`);
     const data = await res.json();
-    if (res.status !== 200 && !list[stringifySearchParams({ ...newParams })]) {
+    if (res.status !== 200 && !list[stringifySearchParams(newParams)]) {
       const res = await apiFetch(
         `/products?${stringifySearchParams({ ...params, _start: 0 })}`
       );
