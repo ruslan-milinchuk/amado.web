@@ -69,12 +69,12 @@ class Shop extends Component {
               onClick={value =>
                 getListProducts({ ...params, _sort: `createdAt:${value}` })
               }
-              visible={dropDownModalStatus === "DATE"}
+              visible={dropDownModalStatus === "Date"}
               title="Date"
               arr={listDropDownSort}
-              changeDropDownState={() =>
+              changeDropDownState={value =>
                 this.setState({
-                  dropDownModalStatus: dropDownModalStatus ? null : "DATE"
+                  dropDownModalStatus: value
                 })
               }
               value={
@@ -85,24 +85,24 @@ class Shop extends Component {
               onClick={value =>
                 getListProducts({ ...params, _sort: `price:${value}` })
               }
-              visible={dropDownModalStatus === "PRICE"}
+              visible={dropDownModalStatus === "Price"}
               title="Price"
               arr={listDropDownSort}
-              changeDropDownState={() =>
+              changeDropDownState={value =>
                 this.setState({
-                  dropDownModalStatus: dropDownModalStatus ? null : "PRICE"
+                  dropDownModalStatus: value
                 })
               }
               value={_sort && _sort.includes("price") && _sort.split(":")[1]}
             />
             <DropDownHeader
               onClick={value => getListProducts({ ...params, _limit: value })}
-              visible={dropDownModalStatus === "VIEW"}
+              visible={dropDownModalStatus === "View"}
               title="View"
               arr={listDropDownView}
-              changeDropDownState={() =>
+              changeDropDownState={value =>
                 this.setState({
-                  dropDownModalStatus: dropDownModalStatus ? null : "VIEW"
+                  dropDownModalStatus: value
                 })
               }
               value={_limit}
@@ -227,10 +227,15 @@ const DropDownHeader = ({
   onClick
 }) => {
   return (
-    <div className={styles.dropMenu} onClick={changeDropDownState}>
+    <div className={styles.dropMenu} onClick={() => changeDropDownState(title)}>
       <h4 className={styles.dropMenuTitle}>{title}</h4>
       <div className={styles.dropMenuQty}>
-        <DropDown arr={arr} visible={visible} onClick={onClick} />
+        <DropDown
+          arr={arr}
+          visible={visible}
+          onClick={onClick}
+          changeDropDownState={changeDropDownState}
+        />
       </div>
       <p className={styles.valueDropDown}>{value}</p>
       <div
@@ -246,7 +251,7 @@ const DropDownHeader = ({
   );
 };
 
-const DropDown = ({ visible, arr, onClick }) => {
+const DropDown = ({ visible, arr, onClick, changeDropDownState }) => {
   return (
     <div
       className={
@@ -260,6 +265,10 @@ const DropDown = ({ visible, arr, onClick }) => {
           key={index}
         >
           <span
+            onClick={e => {
+              e.stopPropagation();
+              changeDropDownState(null);
+            }}
             className={
               visible
                 ? `${styles.closeMenuActive}`
