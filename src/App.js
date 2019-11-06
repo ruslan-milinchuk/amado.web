@@ -1,7 +1,6 @@
 import React from "react";
 import { Router, Route } from "react-router-dom";
 import createBrowserHistory from "history/createBrowserHistory";
-import "./App.css";
 import Footer from "./components/Footer";
 import Layout from "./components/Layout";
 import Header from "./components/Header";

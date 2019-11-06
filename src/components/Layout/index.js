@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { animateScroll as scroll } from "react-scroll";
+import cx from "classnames";
 import style from "./layout.module.css";
 import TriangleTop from "../../icons/TriangleTop";
 import withScroll from "../withScroll";
@@ -20,9 +21,10 @@ class Layout extends Component {
       <div className={style.wrapper}>
         {children}
         <div
-          className={
-            scrollPosition > 300 ? `${style.scrollTop}` : `${style.displayNone}`
-          }
+          className={cx(
+            { [style.scrollTop]: scrollPosition > 300 },
+            { [style.displayNone]: scrollPosition <= 300 }
+          )}
           onClick={() => scroll.scrollToTop()}
         >
           <TriangleTop />

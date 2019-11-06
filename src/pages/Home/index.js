@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import cx from "classnames";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import styles from "./home.module.css";
@@ -33,7 +34,7 @@ class Home extends Component {
               className={styles.item}
               onClick={() => history.push(`/product/${id}`)}
             >
-              <div className={`${styles.inner} ${styles.correlationHeight}`}>
+              <div className={cx(styles.inner, styles.correlationHeight)}>
                 <div className={styles.content}>
                   <div className={styles.info}>
                     <p className={styles.price}>From ${price}</p>
@@ -43,7 +44,7 @@ class Home extends Component {
                   <img
                     className={styles.img}
                     src={slider[topImgNumber].large}
-                    alt={slider[topImgNumber].large}
+                    alt="product"
                   />
                 </div>
               </div>

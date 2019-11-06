@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import { SIZE_SCREEN_PHONE } from "../../constants";
 import { isEmpty } from "../../utils/isEmpty";
 import { checkLocalStorage } from "../../action/cart";
+import cx from "classnames";
 class Header extends Component {
   componentDidMount() {
     const { windowWidth, isOpenHeader, changeMenuStatus } = this.props;
@@ -42,13 +43,23 @@ class Header extends Component {
     const { isOpenHeader, changeMenuStatus, windowWidth } = this.props;
     return (
       <div className={styles.wrapper}>
-        <div className={isOpenHeader ? styles.sectionClose : styles.section}>
+        <div
+          className={cx(
+            { [styles.sectionClose]: isOpenHeader },
+            { [styles.section]: !isOpenHeader }
+          )}
+        >
           <div
-            className={
-              !isOpenHeader && windowWidth <= SIZE_SCREEN_PHONE
-                ? styles.openMenu
-                : styles.closedMenu
-            }
+            className={cx(
+              {
+                [styles.openMenu]:
+                  !isOpenHeader && windowWidth <= SIZE_SCREEN_PHONE
+              },
+              {
+                [styles.closedMenu]:
+                  !isOpenHeader && windowWidth > SIZE_SCREEN_PHONE
+              }
+            )}
             onClick={changeMenuStatus}
           />
           <div className={styles.btnClosed} onClick={changeMenuStatus} />
@@ -126,11 +137,9 @@ class BottomNav extends Component {
       <div>
         <Link
           to="/cart"
-          className={
-            isEmpty(cartList)
-              ? `${styles.unactive} ${styles.btnItem}`
-              : styles.btnItem
-          }
+          className={cx(styles.btnItem, {
+            [styles.unactive]: isEmpty(cartList)
+          })}
         >
           <div className={styles.btnIcon}>
             <Basket />
