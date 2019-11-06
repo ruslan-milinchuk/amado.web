@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import MaskedInput from "react-text-mask";
-
+import cx from "classnames";
 import styles from "./checkout.module.css";
 import { Field, reduxForm } from "redux-form";
 import CartTotal from "../../components/CartTotal";
@@ -92,10 +92,10 @@ class Form extends Component {
             ({ name, type, component, placeholder, className }, index) => (
               <div
                 key={index}
-                className={`${styles.fieldWrapper} ${styles[name]}`}
+                className={cx(styles.fieldWrapper, styles[name])}
               >
                 <Field
-                  className={`${styles.field} ${styles[component]}`}
+                  className={cx(styles.field, styles[component])}
                   name={name}
                   type={type}
                   component={
@@ -126,11 +126,12 @@ class Form extends Component {
           history={history}
         />
         <div
-          className={
-            postOrderStatus
-              ? `${styles.orderShippedWrapp}`
-              : `${styles.orderOpenWrapp}`
-          }
+          className={cx(
+            { [styles.orderOpenWrapp]: !postOrderStatus },
+            {
+              [styles.orderShippedWrapp]: postOrderStatus
+            }
+          )}
         >
           <div className={styles.orderShipped}>
             <p>Thank you for your order. Our manager will contact you</p>
@@ -148,21 +149,19 @@ const checkMaxLength = isMaxLength(MAX_LENGTH_SYMBOL);
 
 const Input = ({ input, meta, ...props }) => (
   <div
-    className={
-      meta.error === checkMaxLength ||
-      (meta.error === REQUIRED_FIELD && meta.touched)
-        ? `${styles.inputWrapperError}`
-        : `${styles.inputWrapper}`
-    }
+    className={cx(styles.inputWrapper, {
+      [styles.inputWrapperError]:
+        meta.error === checkMaxLength ||
+        (meta.error === REQUIRED_FIELD && meta.touched)
+    })}
   >
     <input {...input} {...props} />
     <span
-      className={
-        meta.error === checkMaxLength ||
-        (meta.error === REQUIRED_FIELD && meta.touched)
-          ? `${styles.errorTrue}`
-          : `${styles.errorFalse}`
-      }
+      className={cx(styles.errorFalse, {
+        [styles.errorTrue]:
+          meta.error === checkMaxLength ||
+          (meta.error === REQUIRED_FIELD && meta.touched)
+      })}
     >
       {meta.error}
     </span>
@@ -173,14 +172,12 @@ const TextArea = ({ input, meta, ...props }) => {
   const hasError = meta.error;
   return (
     <div
-      className={
-        hasError ? `${styles.inputWrapperError}` : `${styles.inputWrapper}`
-      }
+      className={cx(styles.inputWrapper, {
+        [styles.inputWrapperError]: hasError
+      })}
     >
       <textarea {...input} {...props} />
-      <span
-        className={hasError ? `${styles.errorTrue}` : `${styles.errorFalse}`}
-      >
+      <span className={cx(styles.errorFalse, { [styles.errorTrue]: hasError })}>
         {meta.error}
       </span>
     </div>
@@ -196,12 +193,11 @@ class CountrySelect extends Component {
     const { countriesList, input, meta, ...props } = this.props;
     return (
       <div
-        className={
-          meta.error === checkMaxLength ||
-          (meta.error === REQUIRED_FIELD && meta.touched)
-            ? `${styles.inputWrapperError}`
-            : `${styles.inputWrapper}`
-        }
+        className={cx(styles.inputWrapper, {
+          [styles.inputWrapperError]:
+            meta.error === checkMaxLength ||
+            (meta.error === REQUIRED_FIELD && meta.touched)
+        })}
       >
         <select {...props} {...input}>
           {countriesList.map(({ name, id, code }) => (
@@ -217,20 +213,17 @@ class CountrySelect extends Component {
 
 const PhoneInput = ({ input, meta, ...props }) => (
   <div
-    className={
-      meta.error === checkMaxLength ||
-      (meta.error === REQUIRED_FIELD && meta.touched)
-        ? `${styles.inputWrapperError}`
-        : `${styles.inputWrapper}`
-    }
+    className={cx(styles.inputWrapper, {
+      [styles.inputWrapperError]:
+        meta.error === checkMaxLength ||
+        (meta.error === REQUIRED_FIELD && meta.touched)
+    })}
   >
     <MaskedInput {...input} {...props} mask={MASK} quide={true} />
     <span
-      className={
-        meta.error === REQUIRED_FIELD && meta.touched
-          ? `${styles.errorTrue}`
-          : `${styles.errorFalse}`
-      }
+      className={cx(styles.errorFalse, {
+        [styles.errorTrue]: meta.error === REQUIRED_FIELD && meta.touched
+      })}
     >
       {meta.error}
     </span>
@@ -243,14 +236,14 @@ const inputsData = [
     placeholder: "First Name",
     component: "input",
     type: "text",
-    className: `${styles.field} ${styles.name}`
+    className: styles.field
   },
   {
     name: "lastName",
     placeholder: "Last Name",
     component: "input",
     type: "text",
-    className: `${styles.surname} ${styles.field}`
+    className: styles.field
   },
   {
     name: "company",
@@ -292,7 +285,7 @@ const inputsData = [
     placeholder: "Zip Code",
     component: "input",
     type: "text",
-    className: styles.code
+    className: styles.field
   },
   {
     name: "phone",

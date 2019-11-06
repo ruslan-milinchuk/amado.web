@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import cx from "classnames";
 import styles from "./shop.module.css";
 import { connect } from "react-redux";
 import { getListProducts } from "../../action/shop";
@@ -27,7 +28,7 @@ class Shop extends Component {
 
   render() {
     const { shop, getListProducts, addToCart, cartList } = this.props;
-    const { params, list, controlRightActive } = shop;
+    const { params, list } = shop;
     const { _limit, isTop, type, _start, _sort } = params;
     const { dropDownModalStatus } = this.state;
     return (
@@ -51,11 +52,9 @@ class Shop extends Component {
           >
             <h3 className={styles.typeTitle}>Popular</h3>
             <p
-              className={
-                isTop
-                  ? `${styles.popularItem} ${styles.popularActive}`
-                  : `${styles.popularItem}`
-              }
+              className={cx(styles.popularItem, {
+                [styles.popularActive]: isTop
+              })}
             >
               Show popular
             </p>
@@ -116,11 +115,9 @@ class Shop extends Component {
           />
           <div className={styles.control}>
             <div
-              className={
-                !_start
-                  ? `${styles.controlLeft} ${styles.controlLeftUnActive}`
-                  : `${styles.controlLeft}`
-              }
+              className={cx(styles.controlLeft, {
+                [styles.controlLeftUnActive]: !_start
+              })}
               onClick={() =>
                 getListProducts({
                   ...params,
@@ -131,11 +128,7 @@ class Shop extends Component {
               <TriangleTop />
             </div>
             <div
-              className={
-                !controlRightActive
-                  ? `${styles.controlRight} ${styles.controlRightUnActive}`
-                  : `${styles.controlRight}`
-              }
+              className={styles.controlRight}
               onClick={() =>
                 getListProducts({
                   ...params,
@@ -168,11 +161,9 @@ const ListTypes = ({ getListProducts, type, params }) => {
               _q: undefined
             })
           }
-          className={
-            type === item || (!type && item === "all")
-              ? `${styles.typeItemActive} ${styles.typeItem}`
-              : `${styles.typeItem}`
-          }
+          className={cx(styles.typeItem, {
+            [styles.typeItemActive]: type === item || (!type && item === "all")
+          })}
           key={index}
         >
           {item}
@@ -199,11 +190,9 @@ const CartList = ({ list, params, addToCart, cartList }) => {
             <h4 className={styles.title}>{title}</h4>
             <div
               onClick={() => addToCart(id, slider[1], title, price)}
-              className={
-                cartList[id]
-                  ? `${styles.basketActive} ${styles.basket}`
-                  : `${styles.basket}`
-              }
+              className={cx(styles.basket, {
+                [styles.basketActive]: cartList[id]
+              })}
             >
               <Basket />
             </div>
@@ -239,11 +228,9 @@ const DropDownHeader = ({
       </div>
       <p className={styles.valueDropDown}>{value}</p>
       <div
-        className={
-          visible
-            ? `${styles.dropMenuControl} ${styles.dropMenuControlOpen}`
-            : `${styles.dropMenuControl}`
-        }
+        className={cx(styles.dropMenuControl, {
+          [styles.dropMenuControlOpen]: visible
+        })}
       >
         <TriangleTop />
       </div>
@@ -254,9 +241,10 @@ const DropDownHeader = ({
 const DropDown = ({ visible, arr, onClick, changeDropDownState }) => {
   return (
     <div
-      className={
-        !visible ? `${styles.dropMenuListClose}` : `${styles.dropMenuList}`
-      }
+      className={cx(
+        { [styles.dropMenuListClose]: !visible },
+        { [styles.dropMenuList]: visible }
+      )}
     >
       {arr.map((item, index) => (
         <p
@@ -269,11 +257,10 @@ const DropDown = ({ visible, arr, onClick, changeDropDownState }) => {
               e.stopPropagation();
               changeDropDownState(null);
             }}
-            className={
-              visible
-                ? `${styles.closeMenuActive}`
-                : `${styles.closeMenuUnactive}`
-            }
+            className={cx(
+              { [styles.closeMenuUnactive]: !visible },
+              { [styles.closeMenuActive]: visible }
+            )}
           />
           {item}
         </p>
@@ -301,9 +288,10 @@ const FilterColor = ({ getListProducts, params }) => {
         <div
           key={index}
           style={{ background: item }}
-          className={
-            _q === item ? `${styles.filterItemActive}` : `${styles.filterItem}`
-          }
+          className={cx(
+            { [styles.filterItemActive]: _q === item },
+            { [styles.filterItem]: _q !== item }
+          )}
           onClick={() =>
             getListProducts({
               ...params,

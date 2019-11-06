@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./cart.module.css";
+import cx from "classnames";
 import { connect } from "react-redux";
 import { changeQtyProduct, setCartTotal } from "../../action/cart";
 import {
@@ -48,7 +49,7 @@ const CartList = ({ cartList, changeQtyProduct }) =>
   Object.values(cartList).map(item => (
     <div key={item.id} className={styles.cartWrapper}>
       <div className={styles.cartItem}>
-        <div className={`${styles.inner} ${styles.correlationHeight}`}>
+        <div className={cx(styles.inner, styles.correlationHeight)}>
           <div className={styles.content}>
             <img
               className={styles.cartImg}

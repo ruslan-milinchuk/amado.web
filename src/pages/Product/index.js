@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import cx from "classnames";
 import { withRouter } from "react-router";
 import { connect } from "react-redux";
 import styles from "./product.module.css";
@@ -124,10 +125,10 @@ const Slider = ({ listImg, activeImg, chooseImg, loader }) => {
   return (
     <div className={styles.slider}>
       <div className={styles.slide}>
-        <div className={`${styles.inner} ${styles.correlationHeight}`}>
+        <div className={cx(styles.inner, styles.correlationHeight)}>
           <div className={styles.content}>
             <img
-              className={`${styles.img} ${styles.imgMain}`}
+              className={cx(styles.img, styles.imgMain)}
               src={activeImg.large}
               alt="product"
             />
@@ -138,14 +139,12 @@ const Slider = ({ listImg, activeImg, chooseImg, loader }) => {
         {listImg.map(({ id, small, large }, index) => (
           <div
             key={id}
-            className={
-              activeImg.large === large
-                ? `${styles.item} ${styles.itemActive}`
-                : `${styles.item}`
-            }
+            className={cx(styles.item, {
+              [styles.itemActive]: activeImg.large === large
+            })}
             onClick={() => chooseImg(index)}
           >
-            <div className={`${styles.inner} ${styles.correlationHeight}`}>
+            <div className={cx(styles.inner, styles.correlationHeight)}>
               <div className={styles.content}>
                 <img className={styles.img} src={small} alt="product" />
               </div>
